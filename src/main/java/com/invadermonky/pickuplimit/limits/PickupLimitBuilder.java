@@ -1,6 +1,7 @@
 package com.invadermonky.pickuplimit.limits;
 
 import baubles.api.IBauble;
+import com.google.common.collect.Lists;
 import com.invadermonky.pickuplimit.util.LogHelper;
 import com.invadermonky.pickuplimit.util.ModIds;
 import com.invadermonky.pickuplimit.util.StringHelper;
@@ -215,6 +216,13 @@ public class PickupLimitBuilder {
             this.stagedGroupStackRemovals.put(stageName, stackList);
         }
         return this;
+    }
+
+    @Optional.Method(modid = ModIds.ConstIds.gamestages)
+    public PickupLimitBuilder addStagedOreGroupRemoval(String stageName, String oreDict) {
+        NonNullList<ItemStack> stackList = NonNullList.create();
+        stackList.addAll(OreDictionary.getOres(oreDict));
+        return addStagedStackGroupRemoval(stageName, stackList.toArray(new ItemStack[0]));
     }
 
     /**

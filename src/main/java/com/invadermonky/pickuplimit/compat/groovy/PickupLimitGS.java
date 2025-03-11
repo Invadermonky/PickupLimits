@@ -101,6 +101,15 @@ public class PickupLimitGS extends VirtualizedRegistry<PickupLimitGroup> {
             return this;
         }
 
+        @Optional.Method(modid = ModIds.ConstIds.gamestages)
+        @RecipeBuilderDescription
+        public RecipeBuilder addStagedOreGroupRemovals(String stageName, OreDictIngredient... oreDictIngredients) {
+            for(OreDictIngredient oreDictIngredient : oreDictIngredients) {
+                this.builder.addStagedOreGroupRemoval(stageName, oreDictIngredient.getOreDict());
+            }
+            return this;
+        }
+
         @Override
         public String getErrorMsg() {
             return "Error creating new Pickup Limit group.";

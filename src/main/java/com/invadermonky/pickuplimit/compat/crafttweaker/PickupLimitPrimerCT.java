@@ -11,6 +11,8 @@ import net.minecraftforge.fml.common.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+import java.util.Arrays;
+
 @ZenRegister
 @ZenClass(PickupLimitPrimerCT.CLASS)
 public class PickupLimitPrimerCT {
@@ -65,6 +67,15 @@ public class PickupLimitPrimerCT {
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
     public PickupLimitPrimerCT addStagedStackRemovals(String stageName, IItemStack... stacks) {
         this.builder.addStagedStackGroupRemoval(stageName, CraftTweakerMC.getItemStacks(stacks));
+        return this;
+    }
+
+    @ZenMethod
+    @Optional.Method(modid = ModIds.ConstIds.gamestages)
+    public PickupLimitPrimerCT addStagedOreRemovals(String stageName, IOreDictEntry... oreDictEntries) {
+        for(IOreDictEntry oreDictEntry : oreDictEntries) {
+            this.builder.addStagedOreGroupRemoval(stageName, oreDictEntry.getName());
+        }
         return this;
     }
 
