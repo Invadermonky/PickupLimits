@@ -33,6 +33,7 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
         this.checkOffhand = builder.getCheckOffhand();
         this.groupEnchants = builder.getGroupEnchants();
         this.stagedEnchantRemovals = builder.getStagedEnchantRemovals();
+        this.cleanLists();
     }
 
     private void cleanLists() {
@@ -82,6 +83,9 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
 
     private boolean enchantmentMatches(EntityPlayer player, ItemStack stack) {
         if(!stack.isEmpty() && stack.isItemEnchanted()) {
+            if(this.matchAnyEnchant)
+                return true;
+
             Set<Enchantment> limitEnchants = this.getLimitEnchants(player);
             for(Enchantment stackEnch : EnchantmentHelper.getEnchantments(stack).keySet()) {
                 if(limitEnchants.contains(stackEnch))

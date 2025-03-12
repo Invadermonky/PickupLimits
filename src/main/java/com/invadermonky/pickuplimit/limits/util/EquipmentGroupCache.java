@@ -1,4 +1,4 @@
-package com.invadermonky.pickuplimit.handlers.util;
+package com.invadermonky.pickuplimit.limits.util;
 
 import com.invadermonky.pickuplimit.limits.EquipmentLimitGroup;
 import net.minecraft.entity.player.EntityPlayer;

@@ -1,11 +1,11 @@
-package com.invadermonky.pickuplimit.handlers.limits;
+package com.invadermonky.pickuplimit.limits.handlers;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
 import com.invadermonky.pickuplimit.config.ConfigHandlerPL;
 import com.invadermonky.pickuplimit.handlers.CommonEventHandler;
-import com.invadermonky.pickuplimit.handlers.util.EquipmentGroupCache;
 import com.invadermonky.pickuplimit.limits.EquipmentLimitGroup;
+import com.invadermonky.pickuplimit.limits.util.EquipmentGroupCache;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import gnu.trove.map.hash.THashMap;
@@ -42,7 +42,7 @@ public class EquipmentLimitHandler {
                                 player.dropItem(extracted, true);
                             }
                             cachedGroup.shrinkInvCount(player, baubleStack);
-                            CommonEventHandler.sendEquipmentLimitMessage(player, baubleStack, group);
+                            CommonEventHandler.sendEquipmentLimitMessage(player, baubleStack, cachedGroup);
                         }
 
 
@@ -50,9 +50,10 @@ public class EquipmentLimitHandler {
                 }
             }
 
-            //Running through equipment slots.
-            for(EntityEquipmentSlot equipmentSlot : EntityEquipmentSlot.values()) {
-                //Excluding Mainhand as it is handled last and has a different logic from the other slots.
+            //Iterating through equipment slots backwards
+            for(int i = EntityEquipmentSlot.values().length - 1; i >= 0; i--) {
+                EntityEquipmentSlot equipmentSlot = EntityEquipmentSlot.values()[i];
+                //Excluding Mainhand as it is handled last and has a different logic than the other slots
                 if(equipmentSlot == EntityEquipmentSlot.MAINHAND)
                     continue;
 
@@ -69,7 +70,7 @@ public class EquipmentLimitHandler {
                             player.dropItem(stack, true);
                         }
                         cacheGroup.shrinkInvCount(player, stack);
-                        CommonEventHandler.sendEquipmentLimitMessage(player, stack, group);
+                        CommonEventHandler.sendEquipmentLimitMessage(player, stack, cacheGroup);
                     }
                 }
             }
@@ -86,7 +87,7 @@ public class EquipmentLimitHandler {
                     player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
                     player.dropItem(mhStack, true);
                     cachedGroup.shrinkInvCount(player, mhStack);
-                    CommonEventHandler.sendEquipmentLimitMessage(player, mhStack, group);
+                    CommonEventHandler.sendEquipmentLimitMessage(player, mhStack, cachedGroup);
                 }
             }
         }
