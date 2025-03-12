@@ -1,1 +1,4 @@
+
+# Chat
+chat.pickuplimit:no_equip=You cannot equip %s
 chat.pickuplimit:no_pickup=You cannot carry any more %s

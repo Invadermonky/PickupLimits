@@ -1,8 +1,8 @@
-package com.invadermonky.pickuplimit.compat.crafttweaker;
+package com.invadermonky.pickuplimit.compat.crafttweaker.limits;
 
-import com.invadermonky.pickuplimit.limits.PickupLimitBuilder;
-import com.invadermonky.pickuplimit.limits.PickupLimitRegistry;
-import com.invadermonky.pickuplimit.util.ModIds;
+import com.invadermonky.pickuplimit.limits.builders.PickupLimitBuilder;
+import com.invadermonky.pickuplimit.registry.LimitRegistry;
+import com.invadermonky.pickuplimit.util.libs.ModIds;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
@@ -11,12 +11,9 @@ import net.minecraftforge.fml.common.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-import java.util.Arrays;
-
 @ZenRegister
 @ZenClass(PickupLimitPrimerCT.CLASS)
 public class PickupLimitPrimerCT {
-    public static final String NAME = "PickupLimit";
     public static final String CLASS = "mods.pickuplimit.PickupLimitBuilder";
 
     private PickupLimitBuilder builder;
@@ -26,20 +23,20 @@ public class PickupLimitPrimerCT {
     }
 
     @ZenMethod
-    public PickupLimitPrimerCT addStacksToGroup(IItemStack... stacks) {
+    public PickupLimitPrimerCT addStacks(IItemStack... stacks) {
         this.builder.addStacksToGroup(CraftTweakerMC.getItemStacks(stacks));
         return this;
     }
 
     @ZenMethod
-    public PickupLimitPrimerCT addOreDictToGroup(IOreDictEntry oreDictEntry) {
+    public PickupLimitPrimerCT addOreDict(IOreDictEntry oreDictEntry) {
         this.builder.addOreDictToGroup(oreDictEntry.getName());
         return this;
     }
 
     @ZenMethod
-    public PickupLimitPrimerCT setPickupLimitMessage(String message) {
-        this.builder.setPickupLimitMessage(message);
+    public PickupLimitPrimerCT setLimitMessage(String message) {
+        this.builder.setLimitMessage(message);
         return this;
     }
 
@@ -81,6 +78,6 @@ public class PickupLimitPrimerCT {
 
     @ZenMethod
     public void build() {
-        PickupLimitRegistry.addPickupLimitGroup(this.builder.build());
+        LimitRegistry.addPickupLimitGroup(this.builder.build());
     }
 }

@@ -16,14 +16,15 @@ public class ConfigHandlerPL {
         @Config.Comment("Enabling this feature allows the item limit logic to run on players in creative mode.")
         public boolean creativeOverride = false;
 
-        @Config.Comment("Enables sending a message to the player when they are unable to pick up an item due to inventory limits.")
+        @Config.Comment("Enables sending a message to the player when they are unable to pick up an item due to pickup limits.")
         public boolean enablePickupLimitMessage = true;
 
-        @Config.RangeInt(min = 0, max = 600)
-        @Config.Comment(
-                "The time, in ticks, between each inventory check. The inventory check will scan a player's inventory to ensure have\n" +
-                        "not exceeded any item limits. Any extra items found will be dropped into the world. Setting this value to 0 will\n" +
-                        "disable this check.")
+        @Config.Comment("Enables sending a message to the player when they are unable to equip an item due to equipment limits.")
+        public boolean enableEquipmentLimitMessage = true;
+
+        @Config.RangeInt(min = 1, max = 12000)
+        @Config.Comment("The time, in ticks, between each inventory check. The inventory check will scan a player's inventory to ensure\n" +
+                "they have not exceeded any item limits.")
         public int inventoryCheckInterval = 20;
     }
 

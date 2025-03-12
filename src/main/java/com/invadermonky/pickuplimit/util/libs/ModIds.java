@@ -1,4 +1,4 @@
-package com.invadermonky.pickuplimit.util;
+package com.invadermonky.pickuplimit.util.libs;
 
 import baubles.common.Baubles;
 import com.cleanroommc.groovyscript.GroovyScript;
