@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.regex.Matcher;
@@ -64,6 +65,8 @@ public class ModTags {
                 if (matcher.find()) {
                     //The setting will always be matcher group 6 for item parsing.
                     int setting = Integer.parseInt(matcher.group(6));
+                    if(setting != Short.MIN_VALUE)
+                        setting = MathHelper.clamp(setting, 0, Short.MAX_VALUE);
                     if (matcher.group(5) == null) {
                         simpleItemMap.put(matcher.group(1), setting);
                     } else {

@@ -8,7 +8,6 @@ import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
-import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.Map;
 import java.util.Objects;
@@ -60,7 +59,7 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
     public abstract int getStackLimitValue(EntityPlayer player, ItemStack stack);
 
     public int getLimit(EntityPlayer player) {
-        int limit = this.getStageLimitOverride(player);
+        int limit = this.getLimitWithStageOverride(player);
         if(limit < 0) {
             return -1;
         }
@@ -70,6 +69,7 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
             for(ItemStack limitArmor : this.armorLimitAdjustments.keySet()) {
                 if(ItemStack.areItemsEqualIgnoreDurability(armorStack, limitArmor) && (!limitArmor.hasTagCompound() || ItemStack.areItemStackTagsEqual(armorStack, limitArmor))) {
                     limit += this.armorLimitAdjustments.get(limitArmor);
+                    break;
                 }
             }
         }
@@ -90,7 +90,7 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
         return Math.max(0, limit);
     }
 
-    private int getStageLimitOverride(EntityPlayer player) {
+    protected int getLimitWithStageOverride(EntityPlayer player) {
         int limit = this.defaultLimit;
         if(ModIds.gamestages.isLoaded()) {
             for(String stage : this.stageLimitOverride.keySet()) {
@@ -121,18 +121,7 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
         }
     }
 
-    public boolean matches(EntityPlayer player, ItemStack stack) {
-        if(!stack.isEmpty()) {
-            for (ItemStack limitStack : this.getLimitStacks(player)) {
-                if (OreDictionary.itemMatches(limitStack, stack, false)) {
-                    if (!limitStack.hasTagCompound() || ItemStack.areItemStackTagsEqual(stack, limitStack)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
+    public abstract boolean matches(EntityPlayer player, ItemStack stack);
 
     @Override
     public boolean equals(Object o) {

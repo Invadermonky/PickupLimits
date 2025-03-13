@@ -1,10 +1,11 @@
 package com.invadermonky.pickuplimit.compat.crafttweaker.limits;
 
+import com.invadermonky.pickuplimit.PickupLimits;
 import com.invadermonky.pickuplimit.limits.builders.EquipmentLimitBuilder;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.enchantments.IEnchantment;
+import crafttweaker.api.enchantments.IEnchantmentDefinition;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import net.minecraft.enchantment.Enchantment;
@@ -17,7 +18,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 @ZenClass(EquipmentLimitPrimerCT.CLASS)
 public class EquipmentLimitPrimerCT {
-    public static final String CLASS = "mods.pickuplimit.EquipmentLimitBuilder";
+    public static final String CLASS = "mods." + PickupLimits.MOD_ID + ".EquipmentLimitBuilder";
 
     private EquipmentLimitBuilder builder;
 
@@ -32,10 +33,10 @@ public class EquipmentLimitPrimerCT {
     }
 
     @ZenMethod
-    public EquipmentLimitPrimerCT addEnchantments(IEnchantment... iEnchantments) {
+    public EquipmentLimitPrimerCT addEnchantments(IEnchantmentDefinition... iEnchantments) {
         Enchantment[] enchants = new Enchantment[iEnchantments.length];
         for(int i = 0; i < enchants.length; i++) {
-            enchants[i] = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(iEnchantments[i].getDefinition().getRegistryName()));
+            enchants[i] = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(iEnchantments[i].getRegistryName()));
         }
         this.builder.addEnchantsToGroup(enchants);
         return this;
@@ -48,8 +49,14 @@ public class EquipmentLimitPrimerCT {
     }
 
     @ZenMethod
-    public EquipmentLimitPrimerCT setIgnoreEnchantmentLevels() {
-        this.builder.setIgnoreEnchantmentLevels();
+    public EquipmentLimitPrimerCT setIgnoreItemEnchantmentCount() {
+        this.builder.setIgnoreItemEnchantmentCount();
+        return this;
+    }
+
+    @ZenMethod
+    public EquipmentLimitPrimerCT setIgnoreEnchantmentLevel() {
+        this.builder.setIgnoreEnchantmentLevel();
         return this;
     }
 
@@ -100,10 +107,10 @@ public class EquipmentLimitPrimerCT {
 
     @ZenMethod
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
-    public EquipmentLimitPrimerCT addStagedEnchantmentRemovals(String stageName, IEnchantment... iEnchantments) {
+    public EquipmentLimitPrimerCT addStagedEnchantmentRemovals(String stageName, IEnchantmentDefinition... iEnchantments) {
         Enchantment[] enchants = new Enchantment[iEnchantments.length];
         for(int i = 0; i < enchants.length; i++) {
-            enchants[i] = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(iEnchantments[i].getDefinition().getRegistryName()));
+            enchants[i] = ForgeRegistries.ENCHANTMENTS.getValue(new ResourceLocation(iEnchantments[i].getRegistryName()));
         }
         this.builder.addStagedEnchantRemoval(stageName, enchants);
         return this;

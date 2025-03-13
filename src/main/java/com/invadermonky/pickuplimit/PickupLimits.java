@@ -9,19 +9,19 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 @Mod(
-        modid = PickupLimit.MOD_ID,
-        name = PickupLimit.MOD_NAME,
-        version = PickupLimit.VERSION,
-        acceptedMinecraftVersions = PickupLimit.MC_VERSION
+        modid = PickupLimits.MOD_ID,
+        name = PickupLimits.MOD_NAME,
+        version = PickupLimits.VERSION,
+        acceptedMinecraftVersions = PickupLimits.MC_VERSION
 )
-public class PickupLimit {
-    public static final String MOD_ID = "pickuplimit";
-    public static final String MOD_NAME = "Pickup Limit";
+public class PickupLimits {
+    public static final String MOD_ID = "pickuplimits";
+    public static final String MOD_NAME = "Pickup Limits";
     public static final String VERSION = "1.0.0";
     public static final String MC_VERSION = "[1.12.2]";
 
     @Mod.Instance(MOD_ID)
-    public static PickupLimit instance;
+    public static PickupLimits instance;
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {

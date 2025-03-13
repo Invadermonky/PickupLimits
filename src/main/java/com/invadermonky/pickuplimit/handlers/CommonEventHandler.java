@@ -1,6 +1,6 @@
 package com.invadermonky.pickuplimit.handlers;
 
-import com.invadermonky.pickuplimit.PickupLimit;
+import com.invadermonky.pickuplimit.PickupLimits;
 import com.invadermonky.pickuplimit.config.ConfigHandlerPL;
 import com.invadermonky.pickuplimit.config.ModTags;
 import com.invadermonky.pickuplimit.limits.handlers.EquipmentLimitHandler;
@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-@Mod.EventBusSubscriber(modid = PickupLimit.MOD_ID)
+@Mod.EventBusSubscriber(modid = PickupLimits.MOD_ID)
 public class CommonEventHandler {
     //Fires early to prevent bag mods from intercepting this pickup.
     @SubscribeEvent(priority = EventPriority.HIGH)

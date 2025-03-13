@@ -1,11 +1,11 @@
 package com.invadermonky.pickuplimit.util;
 
-import com.invadermonky.pickuplimit.PickupLimit;
+import com.invadermonky.pickuplimit.PickupLimits;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class LogHelper {
-    private static final Logger LOG = LogManager.getLogger(PickupLimit.MOD_NAME);
+    private static final Logger LOG = LogManager.getLogger(PickupLimits.MOD_NAME);
     public static void debug(Object obj) { LOG.debug(obj); }
     public static void error(Object obj) { LOG.error(obj); }
     public static void fatal(Object obj) { LOG.fatal(obj); }

@@ -1,5 +1,6 @@
 package com.invadermonky.pickuplimit.compat.crafttweaker.limits;
 
+import com.invadermonky.pickuplimit.PickupLimits;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.oredict.IOreDictEntry;
@@ -9,7 +10,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 @ZenClass(PickupLimitBuilderCT.CLASS)
 public class PickupLimitBuilderCT {
-    public static final String CLASS = "mods.pickuplimit.PickupLimit";
+    public static final String CLASS = "mods." + PickupLimits.MOD_ID + ".PickupLimit";
 
     @ZenMethod
     public static void simplePickupLimit(String groupName, int defaultLimit, IItemStack... groupStacks) {
@@ -46,7 +47,7 @@ public class PickupLimitBuilderCT {
     }
 
     @ZenMethod
-    public static PickupLimitPrimerCT newPickupLimit(String groupName, int defaultLimit) {
+    public static PickupLimitPrimerCT pickupLimitBuilder(String groupName, int defaultLimit) {
         return new PickupLimitPrimerCT(groupName, defaultLimit);
     }
 }

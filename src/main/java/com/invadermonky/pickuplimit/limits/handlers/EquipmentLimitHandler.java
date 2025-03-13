@@ -10,9 +10,11 @@ import com.invadermonky.pickuplimit.registry.LimitRegistry;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import gnu.trove.map.hash.THashMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.world.World;
 import net.minecraftforge.event.entity.living.LivingEvent;
 
@@ -34,18 +36,12 @@ public class EquipmentLimitHandler {
                 for(int i = 0; i < handler.getSlots(); i++) {
                     ItemStack baubleStack = handler.getStackInSlot(i);
                     for(EquipmentLimitGroup group : LimitRegistry.getEquipmentLimitGroups(player, baubleStack)) {
-                        EquipmentGroupCache cachedGroup = createOrIncrementCache(player, baubleStack, limitGroups, group);
-                        if(cachedGroup != null && cachedGroup.limit < cachedGroup.getInvCount()) {
-                            //Baubles are removed fully from the slot instead of partial removal
+                        EquipmentGroupCache groupCache = createOrIncrementCache(player, baubleStack, limitGroups, group);
+                        if(groupCache != null && groupCache.limit < groupCache.getInvCount()) {
+                            //Baubles uses an IItemHandler so removal needs to be handled through the extract method
                             ItemStack extracted = handler.extractItem(i, baubleStack.getCount(), false);
-                            if(!player.addItemStackToInventory(extracted)) {
-                                player.dropItem(extracted, true);
-                            }
-                            cachedGroup.shrinkInvCount(player, baubleStack);
-                            CommonEventHandler.sendEquipmentLimitMessage(player, baubleStack, cachedGroup);
+                            handleEquipmentDrop(player, extracted, groupCache, false);
                         }
-
-
                     }
                 }
             }
@@ -62,15 +58,11 @@ public class EquipmentLimitHandler {
                     if(!group.shouldCheckSlot(equipmentSlot))
                         continue;
 
-                    EquipmentGroupCache cacheGroup = createOrIncrementCache(player, stack, limitGroups, group);
-                    if(cacheGroup != null && cacheGroup.limit < cacheGroup.getInvCount()) {
+                    EquipmentGroupCache groupCache = createOrIncrementCache(player, stack, limitGroups, group);
+                    if(groupCache != null && groupCache.limit < groupCache.getInvCount()) {
                         //Equipment is removed fully from the slot instead of partial removal
+                        handleEquipmentDrop(player, stack, groupCache, false);
                         player.setItemStackToSlot(equipmentSlot, ItemStack.EMPTY);
-                        if(!player.addItemStackToInventory(stack)) {
-                            player.dropItem(stack, true);
-                        }
-                        cacheGroup.shrinkInvCount(player, stack);
-                        CommonEventHandler.sendEquipmentLimitMessage(player, stack, cacheGroup);
                     }
                 }
             }
@@ -81,16 +73,23 @@ public class EquipmentLimitHandler {
                 if(!group.shouldCheckSlot(EntityEquipmentSlot.MAINHAND))
                     continue;
 
-                EquipmentGroupCache cachedGroup = createOrIncrementCache(player, mhStack, limitGroups, group);
-                if(cachedGroup != null && cachedGroup.limit < cachedGroup.getInvCount()) {
+                EquipmentGroupCache groupCache = createOrIncrementCache(player, mhStack, limitGroups, group);
+                if(groupCache != null && groupCache.limit < groupCache.getInvCount()) {
                     //Mainhand equipment is dropped if held
+                    handleEquipmentDrop(player, mhStack, groupCache, true);
                     player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
-                    player.dropItem(mhStack, true);
-                    cachedGroup.shrinkInvCount(player, mhStack);
-                    CommonEventHandler.sendEquipmentLimitMessage(player, mhStack, cachedGroup);
                 }
             }
         }
+    }
+    
+    private static void handleEquipmentDrop(EntityPlayer player, ItemStack stack, EquipmentGroupCache groupCache, boolean forceDrop) {
+        player.world.playSound(null, player.getPosition(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0f, 1.0f);
+        CommonEventHandler.sendEquipmentLimitMessage(player, stack, groupCache);
+        if(forceDrop || !player.addItemStackToInventory(stack)) {
+            player.dropItem(stack, true);
+        }
+        groupCache.shrinkInvCount(player, stack);
     }
 
     private static EquipmentGroupCache createOrIncrementCache(EntityPlayer player, ItemStack stack, THashMap<String, EquipmentGroupCache> limitGroups, EquipmentLimitGroup group) {

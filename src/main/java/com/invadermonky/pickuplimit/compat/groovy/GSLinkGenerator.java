@@ -1,17 +1,17 @@
 package com.invadermonky.pickuplimit.compat.groovy;
 
 import com.cleanroommc.groovyscript.documentation.linkgenerator.BasicLinkGenerator;
-import com.invadermonky.pickuplimit.PickupLimit;
+import com.invadermonky.pickuplimit.PickupLimits;
 
 public class GSLinkGenerator extends BasicLinkGenerator {
     @Override
     public String id() {
-        return PickupLimit.MOD_NAME;
+        return PickupLimits.MOD_NAME;
     }
 
     @Override
     protected String version() {
-        return PickupLimit.VERSION;
+        return PickupLimits.VERSION;
     }
 
     @Override

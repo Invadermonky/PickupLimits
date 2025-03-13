@@ -2,10 +2,12 @@ package com.invadermonky.pickuplimit.compat.groovy.limits;
 
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.GroovyLog;
+import com.cleanroommc.groovyscript.api.documentation.annotations.MethodDescription;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderDescription;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderRegistrationMethod;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
+import com.invadermonky.pickuplimit.PickupLimits;
 import com.invadermonky.pickuplimit.limits.EquipmentLimitGroup;
 import com.invadermonky.pickuplimit.limits.builders.EquipmentLimitBuilder;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
@@ -27,12 +29,14 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
         return new RecipeBuilder(groupName, defaultLimit);
     }
 
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simpleEquipmentLimit(String groupName, int defaultLimit, ItemStack... stacks) {
         this.recipeBuilder(groupName, defaultLimit)
                 .addStacks(stacks)
                 .register();
     }
 
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simpleEquipmentLimit(String groupName, int defaultLimit, String message, ItemStack... stacks) {
         this.recipeBuilder(groupName, defaultLimit)
                 .setLimitMessage(message)
@@ -40,34 +44,51 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
                 .register();
     }
 
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simpleEnchantmentLimit(String groupName, int defaultLimit, Enchantment... enchants) {
         this.recipeBuilder(groupName,defaultLimit)
                 .addEnchantments(enchants)
+                .setCheckOffhand()
                 .register();
     }
 
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simpleEnchantmentLimit(String groupName, int defaultLimit, String message, Enchantment... enchants) {
         this.recipeBuilder(groupName,defaultLimit)
                 .setLimitMessage(message)
                 .addEnchantments(enchants)
+                .setCheckOffhand()
                 .register();
     }
 
-    public void simpleEnchantmentLimit(String groupName, int defaultLimit) {
-        this.recipeBuilder(groupName, defaultLimit)
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
+    public void equippedEnchantedItemLimit(int defaultLimit, boolean checkMainhand) {
+        RecipeBuilder builder = this.recipeBuilder(PickupLimits.MOD_ID + ":equipped_enchant_limit", defaultLimit)
                 .setMatchAnyEnchant()
-                .register();
+                .setIgnoreItemEnchantmentCount()
+                .setCheckOffhand();
+        if(checkMainhand)
+            builder.setCheckMainhand();
+
+        builder.register();
     }
 
-    public void simpleEnchantmentLimit(String groupName, int defaultLimit, String message) {
-        this.recipeBuilder(groupName, defaultLimit)
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
+    public void equippedEnchantedItemLimit(int defaultLimit, String message, boolean checkMainhand) {
+        RecipeBuilder builder = this.recipeBuilder(PickupLimits.MOD_ID + ":equipped_enchant_limit", defaultLimit)
                 .setLimitMessage(message)
                 .setMatchAnyEnchant()
-                .register();
+                .setIgnoreItemEnchantmentCount()
+                .setCheckOffhand();
+        if(checkMainhand)
+            builder.setCheckMainhand();
+
+        builder.register();
     }
 
     @RecipeBuilderDescription
-    public RecipeBuilder newEquipmentLimit(String groupName, int defaultLimit) {
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
+    public RecipeBuilder equipmentLimitBuilder(String groupName, int defaultLimit) {
         return new RecipeBuilder(groupName, defaultLimit);
     }
 
@@ -99,8 +120,14 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
         }
 
         @RecipeBuilderDescription
-        public RecipeBuilder setIgnoreEnchantmentLevels() {
-            this.builder.setIgnoreEnchantmentLevels();
+        public RecipeBuilder setIgnoreItemEnchantmentCount() {
+            this.builder.setIgnoreItemEnchantmentCount();
+            return this;
+        }
+
+        @RecipeBuilderDescription
+        public RecipeBuilder setIgnoreEnchantmentLevel() {
+            this.builder.setIgnoreEnchantmentLevel();
             return this;
         }
 

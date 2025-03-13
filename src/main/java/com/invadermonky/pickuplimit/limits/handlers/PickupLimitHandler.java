@@ -56,6 +56,13 @@ public class PickupLimitHandler {
                 }
             }
 
+            if(player.openContainer != null && !player.inventory.getItemStack().isEmpty()) {
+                ItemStack mouseStack = player.inventory.getItemStack();
+                limitGroups.stream()
+                        .filter(cache -> cache.group.matches(player, mouseStack))
+                        .forEach(cache -> cache.growInvCount(player, mouseStack));
+            }
+
             //Getting the maximum allowable pickup amount and the controlling pickup group
             int maxPickup = pickupStack.getCount();
             PickupGroupCache controllingCache = null;
@@ -71,8 +78,8 @@ public class PickupLimitHandler {
                 event.setCanceled(true);
                 CommonEventHandler.sendPickupLimitMessage(player, pickupStack, controllingCache);
             } else if(maxPickup < pickupStack.getCount()) {
-                ItemStack pickup = pickupStack.splitStack(maxPickup);
-                player.addItemStackToInventory(pickup);
+                ItemStack toPickup = pickupStack.splitStack(maxPickup);
+                player.addItemStackToInventory(toPickup);
                 entityItem.setItem(pickupStack);
                 event.setCanceled(true);
                 CommonEventHandler.sendPickupLimitMessage(player, pickupStack, controllingCache);
@@ -100,14 +107,12 @@ public class PickupLimitHandler {
                         continue;
 
                     for(PickupLimitGroup group : LimitRegistry.getPickupLimitGroups(player, baubleStack)) {
-                        PickupGroupCache cachedGroup = createOrIncrementCache(player, baubleStack, limitGroups, group);
+                        PickupGroupCache groupCache = createOrIncrementCache(player, baubleStack, limitGroups, group);
 
                         //If inventory count exceeds pickup limit, drop the remainder items
-                        if(cachedGroup != null && cachedGroup.limit < cachedGroup.getInvCount()) {
-                            ItemStack extracted = handler.extractItem(i, cachedGroup.getInvCount() - cachedGroup.limit, false);
-                            player.dropItem(extracted, true);
-                            cachedGroup.setInvCount(cachedGroup.limit);
-                            CommonEventHandler.sendPickupLimitMessage(player, baubleStack, cachedGroup);
+                        if(groupCache != null && groupCache.limit < groupCache.getInvCount()) {
+                            ItemStack extracted = handler.extractItem(i, groupCache.getInvCount() - groupCache.limit, false);
+                            handleItemDrop(player, extracted, groupCache);
                         }
                     }
                 }
@@ -120,20 +125,24 @@ public class PickupLimitHandler {
 
                 //Iterating through existing pickup limit groups and adding stack count to running total
                 for(PickupLimitGroup group : LimitRegistry.getPickupLimitGroups(player, invStack)) {
-                    PickupGroupCache cachedGroup = createOrIncrementCache(player, invStack, limitGroups, group);
+                    PickupGroupCache groupCache = createOrIncrementCache(player, invStack, limitGroups, group);
 
                     //If inventory count exceeds pickup limit, drop the remainder items
-                    if(cachedGroup != null && cachedGroup.limit < cachedGroup.getInvCount()) {
+                    if(groupCache != null && groupCache.limit < groupCache.getInvCount()) {
                         ItemStack copy = invStack.copy();
-                        ItemStack dropStack = copy.splitStack(cachedGroup.getInvCount() - cachedGroup.limit);
+                        ItemStack dropStack = copy.splitStack(groupCache.getInvCount() - groupCache.limit);
                         player.inventory.setInventorySlotContents(i, copy);
-                        player.dropItem(dropStack, true);
-                        cachedGroup.setInvCount(cachedGroup.limit);
-                        CommonEventHandler.sendPickupLimitMessage(player, invStack, cachedGroup);
+                        handleItemDrop(player, dropStack, groupCache);
                     }
                 }
             }
         }
+    }
+
+    private static void handleItemDrop(EntityPlayer player, ItemStack stack, PickupGroupCache groupCache) {
+        CommonEventHandler.sendPickupLimitMessage(player, stack, groupCache);
+        player.dropItem(stack, true);
+        groupCache.shrinkInvCount(player, stack);
     }
 
     private static PickupGroupCache createOrIncrementCache(EntityPlayer player, ItemStack stack, THashMap<String, PickupGroupCache> limitGroups, PickupLimitGroup group) {

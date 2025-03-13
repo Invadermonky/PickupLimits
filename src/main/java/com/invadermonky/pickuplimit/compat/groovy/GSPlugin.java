@@ -4,7 +4,7 @@ import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.GroovyPlugin;
 import com.cleanroommc.groovyscript.compat.mods.GroovyContainer;
 import com.cleanroommc.groovyscript.compat.mods.GroovyPropertyContainer;
-import com.invadermonky.pickuplimit.PickupLimit;
+import com.invadermonky.pickuplimit.PickupLimits;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -14,12 +14,12 @@ public class GSPlugin implements GroovyPlugin {
 
     @Override
     public @NotNull String getModId() {
-        return PickupLimit.MOD_ID;
+        return PickupLimits.MOD_ID;
     }
 
     @Override
     public @NotNull String getContainerName() {
-        return PickupLimit.MOD_NAME;
+        return PickupLimits.MOD_NAME;
     }
 
     @Override

@@ -2,12 +2,14 @@ package com.invadermonky.pickuplimit.compat.groovy.limits;
 
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.GroovyLog;
+import com.cleanroommc.groovyscript.api.documentation.annotations.MethodDescription;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderDescription;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderRegistrationMethod;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RegistryDescription;
 import com.cleanroommc.groovyscript.helper.ingredient.OreDictIngredient;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
+import com.invadermonky.pickuplimit.PickupLimits;
 import com.invadermonky.pickuplimit.limits.PickupLimitGroup;
 import com.invadermonky.pickuplimit.limits.builders.PickupLimitBuilder;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
@@ -16,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.Optional;
 import org.jetbrains.annotations.Nullable;
 
-@RegistryDescription(linkGenerator = com.invadermonky.pickuplimit.PickupLimit.MOD_ID)
+@RegistryDescription(linkGenerator = PickupLimits.MOD_ID)
 public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
     @Override
     @GroovyBlacklist
@@ -29,12 +31,14 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
         return new RecipeBuilder(groupName, defaultLimit);
     }
 
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simplePickupLimit(String groupName, int defaultLimit, ItemStack... stacks) {
         this.recipeBuilder(groupName, defaultLimit)
                 .addStacks(stacks)
                 .register();
     }
 
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simplePickupLimit(String groupName, int defaultLimit, String message, ItemStack... stacks) {
         this.recipeBuilder(groupName, defaultLimit)
                 .addStacks(stacks)
@@ -42,6 +46,7 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
                 .register();
     }
 
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simplePickupLimit(String groupName, int defaultLimit, OreDictIngredient... oreDicts) {
         RecipeBuilder builder = new RecipeBuilder(groupName, defaultLimit);
         for(OreDictIngredient oreDict : oreDicts) {
@@ -50,6 +55,7 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
         builder.register();
     }
 
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simplePickupLimit(String groupName, int defaultLimit, String message, OreDictIngredient... oreDicts) {
         RecipeBuilder builder = new RecipeBuilder(groupName, defaultLimit);
         for(OreDictIngredient oreDict : oreDicts) {
@@ -60,7 +66,8 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
     }
 
     @RecipeBuilderDescription
-    public RecipeBuilder newPickupLimit(String groupName, int defaultLimit) {
+    @MethodDescription(type = MethodDescription.Type.ADDITION)
+    public RecipeBuilder pickupLimitBuilder(String groupName, int defaultLimit) {
         return new RecipeBuilder(groupName, defaultLimit);
     }
 

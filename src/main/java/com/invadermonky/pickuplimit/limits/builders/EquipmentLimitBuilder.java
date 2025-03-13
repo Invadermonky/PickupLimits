@@ -13,7 +13,8 @@ import java.util.*;
 
 public class EquipmentLimitBuilder extends AbstractLimitBuilder<EquipmentLimitBuilder, EquipmentLimitGroup> {
     protected boolean matchAnyEnchant;
-    protected boolean ignoreEnchantLevel;
+    protected boolean ignoreItemEnchantmentCount;
+    protected boolean ignoreEnchantmentLevel;
     protected boolean checkMainhand;
     protected boolean checkOffhand;
     protected final Set<Enchantment> groupEnchants = new THashSet<>();
@@ -22,9 +23,6 @@ public class EquipmentLimitBuilder extends AbstractLimitBuilder<EquipmentLimitBu
     public EquipmentLimitBuilder(String groupName, int defaultLimit) {
         super(groupName, defaultLimit);
         this.setLimitMessage(StringHelper.getTranslationKey("no_equip", "chat"));
-        this.ignoreEnchantLevel = false;
-        this.checkMainhand = false;
-        this.checkOffhand = false;
     }
 
     @Override
@@ -50,13 +48,22 @@ public class EquipmentLimitBuilder extends AbstractLimitBuilder<EquipmentLimitBu
         return this.matchAnyEnchant;
     }
 
-    public EquipmentLimitBuilder setIgnoreEnchantmentLevels() {
-        this.ignoreEnchantLevel = true;
+    public EquipmentLimitBuilder setIgnoreItemEnchantmentCount() {
+        this.ignoreItemEnchantmentCount = true;
         return this;
     }
 
-    public boolean getIgnoreEnchantmentLevels() {
-        return this.ignoreEnchantLevel;
+    public boolean getIgnoreItemEnchantmentCount() {
+        return this.ignoreItemEnchantmentCount;
+    }
+
+    public EquipmentLimitBuilder setIgnoreEnchantmentLevel() {
+        this.ignoreEnchantmentLevel = true;
+        return this;
+    }
+
+    public boolean getIgnoreEnchantmentLevel() {
+        return this.ignoreEnchantmentLevel;
     }
 
     public EquipmentLimitBuilder setCheckMainhand() {

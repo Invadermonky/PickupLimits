@@ -1,13 +1,13 @@
 package com.invadermonky.pickuplimit.config;
 
-import com.invadermonky.pickuplimit.PickupLimit;
+import com.invadermonky.pickuplimit.PickupLimits;
 import net.minecraftforge.common.config.Config;
 import net.minecraftforge.common.config.ConfigManager;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-@Config(modid = PickupLimit.MOD_ID)
+@Config(modid = PickupLimits.MOD_ID)
 public class ConfigHandlerPL {
     public static ConfigPickupLimits pickup_limits = new ConfigPickupLimits();
     public static ConfigItemLifetimes item_lifetimes = new ConfigItemLifetimes();
@@ -33,10 +33,10 @@ public class ConfigHandlerPL {
         public boolean enable = false;
 
         @Config.RangeInt(min = 0, max = Short.MAX_VALUE)
-        @Config.Comment("Sets the global lifetime (in ticks) before in-world items despawn.")
+        @Config.Comment("Sets the global item lifetime before dropped items despawn (in ticks).")
         public int globalItemLifetime = 6000;
 
-        @Config.Comment("Individual item lifetime overrides.\n" +
+        @Config.Comment("Individual item lifetime overrides. A lifetime of -32768 will prevent the item from despawning.\n" +
                 "Format: modid:itemid:[meta]{nbtdata}=lifetime (meta and nbtdata are optional)\n" +
                 "Examples:\n" +
                 "  minecraft:stone=20\n" +
@@ -46,12 +46,12 @@ public class ConfigHandlerPL {
         public String[] itemLifetimeOverrides = {};
     }
 
-    @Mod.EventBusSubscriber(modid = PickupLimit.MOD_ID)
+    @Mod.EventBusSubscriber(modid = PickupLimits.MOD_ID)
     public static class ConfigChangeListener {
         @SubscribeEvent
         public static void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event) {
-            if(event.getModID().equals(PickupLimit.MOD_ID)) {
-                ConfigManager.sync(PickupLimit.MOD_ID, Config.Type.INSTANCE);
+            if(event.getModID().equals(PickupLimits.MOD_ID)) {
+                ConfigManager.sync(PickupLimits.MOD_ID, Config.Type.INSTANCE);
                 ModTags.syncConfig();
             }
         }

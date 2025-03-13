@@ -1,5 +1,6 @@
 package com.invadermonky.pickuplimit.compat.crafttweaker.limits;
 
+import com.invadermonky.pickuplimit.PickupLimits;
 import com.invadermonky.pickuplimit.limits.builders.PickupLimitBuilder;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
@@ -14,7 +15,7 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenRegister
 @ZenClass(PickupLimitPrimerCT.CLASS)
 public class PickupLimitPrimerCT {
-    public static final String CLASS = "mods.pickuplimit.PickupLimitBuilder";
+    public static final String CLASS = "mods." + PickupLimits.MOD_ID + ".PickupLimitBuilder";
 
     private PickupLimitBuilder builder;
 

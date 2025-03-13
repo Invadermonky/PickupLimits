@@ -1,15 +1,15 @@
 package com.invadermonky.pickuplimit.handlers;
 
-import com.invadermonky.pickuplimit.PickupLimit;
+import com.invadermonky.pickuplimit.PickupLimits;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
-@Mod.EventBusSubscriber(modid = PickupLimit.MOD_ID)
+@Mod.EventBusSubscriber(modid = PickupLimits.MOD_ID)
 public class ClientEventHandler {
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public static void onItemTooltipEvent(ItemTooltipEvent event) {
         /* TODO: See how people like the mod and how they would like tooltips implemented
