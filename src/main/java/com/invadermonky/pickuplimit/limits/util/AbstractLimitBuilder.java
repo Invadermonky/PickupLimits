@@ -1,6 +1,7 @@
 package com.invadermonky.pickuplimit.limits.util;
 
 import baubles.api.IBauble;
+import com.invadermonky.pickuplimit.limits.api.ILimitFunction;
 import com.invadermonky.pickuplimit.util.LogHelper;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import gnu.trove.map.hash.THashMap;
@@ -8,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.common.Optional;
 
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -17,6 +19,7 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
     protected final String groupName;
     protected final int defaultLimit;
     protected final NonNullList<ItemStack> groupStacks = NonNullList.create();
+    protected ILimitFunction itemLimitFunction;
     protected String pickupLimitMessage;
     protected final Map<ItemStack, Integer> armorLimits = new HashMap<>();
     protected final Map<ItemStack, Integer> baubleLimits = new HashMap<>();
@@ -26,6 +29,7 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
     public AbstractLimitBuilder(String groupName, int defaultLimit) {
         this.groupName = groupName;
         this.defaultLimit = defaultLimit;
+        this.itemLimitFunction = null;
     }
 
     protected abstract T getThis();
@@ -66,11 +70,13 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
      * Sets a new failed pickup message for this group. This can be plain text or a language key. Including a %s will
      * cause the value to include the display name of the ItemStack.
      *
-     * @param pickupLimitMessage The new pickup message text or language key
+     * @param limitMessage The new pickup message text or language key
      * @return this
      */
-    public T setLimitMessage(String pickupLimitMessage) {
-        this.pickupLimitMessage = pickupLimitMessage;
+    public T setLimitMessage(String limitMessage) {
+        if(limitMessage != null) {
+            this.pickupLimitMessage = limitMessage;
+        }
         return this.getThis();
     }
 
@@ -82,6 +88,16 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
      */
     public String getPickupLimitMessage() {
         return this.pickupLimitMessage;
+    }
+
+    public T setItemLimitValueFunction(ILimitFunction function) {
+        this.itemLimitFunction = function;
+        return getThis();
+    }
+
+    @Nullable
+    public ILimitFunction getItemLimitFunction() {
+        return this.itemLimitFunction;
     }
 
     /**

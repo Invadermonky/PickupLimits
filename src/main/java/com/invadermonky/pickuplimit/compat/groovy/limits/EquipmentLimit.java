@@ -2,6 +2,7 @@ package com.invadermonky.pickuplimit.compat.groovy.limits;
 
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.GroovyLog;
+import com.cleanroommc.groovyscript.api.documentation.annotations.Example;
 import com.cleanroommc.groovyscript.api.documentation.annotations.MethodDescription;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderDescription;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderRegistrationMethod;
@@ -9,6 +10,7 @@ import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import com.invadermonky.pickuplimit.PickupLimits;
 import com.invadermonky.pickuplimit.limits.EquipmentLimitGroup;
+import com.invadermonky.pickuplimit.limits.api.ILimitFunction;
 import com.invadermonky.pickuplimit.limits.builders.EquipmentLimitBuilder;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
@@ -31,13 +33,11 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
 
     @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simpleEquipmentLimit(String groupName, int defaultLimit, ItemStack... stacks) {
-        this.recipeBuilder(groupName, defaultLimit)
-                .addStacks(stacks)
-                .register();
+        this.simpleEquipmentLimit(groupName, defaultLimit, null, stacks);
     }
 
     @MethodDescription(type = MethodDescription.Type.ADDITION)
-    public void simpleEquipmentLimit(String groupName, int defaultLimit, String message, ItemStack... stacks) {
+    public void simpleEquipmentLimit(String groupName, int defaultLimit, @Nullable String message, ItemStack... stacks) {
         this.recipeBuilder(groupName, defaultLimit)
                 .setLimitMessage(message)
                 .addStacks(stacks)
@@ -46,14 +46,11 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
 
     @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void simpleEnchantmentLimit(String groupName, int defaultLimit, Enchantment... enchants) {
-        this.recipeBuilder(groupName,defaultLimit)
-                .addEnchantments(enchants)
-                .setCheckOffhand()
-                .register();
+        this.simpleEnchantmentLimit(groupName, defaultLimit, null, enchants);
     }
 
     @MethodDescription(type = MethodDescription.Type.ADDITION)
-    public void simpleEnchantmentLimit(String groupName, int defaultLimit, String message, Enchantment... enchants) {
+    public void simpleEnchantmentLimit(String groupName, int defaultLimit, @Nullable String message, Enchantment... enchants) {
         this.recipeBuilder(groupName,defaultLimit)
                 .setLimitMessage(message)
                 .addEnchantments(enchants)
@@ -63,18 +60,11 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
 
     @MethodDescription(type = MethodDescription.Type.ADDITION)
     public void equippedEnchantedItemLimit(int defaultLimit, boolean checkMainhand) {
-        RecipeBuilder builder = this.recipeBuilder(PickupLimits.MOD_ID + ":equipped_enchant_limit", defaultLimit)
-                .setMatchAnyEnchant()
-                .setIgnoreItemEnchantmentCount()
-                .setCheckOffhand();
-        if(checkMainhand)
-            builder.setCheckMainhand();
-
-        builder.register();
+        equippedEnchantedItemLimit(defaultLimit, null, checkMainhand);
     }
 
     @MethodDescription(type = MethodDescription.Type.ADDITION)
-    public void equippedEnchantedItemLimit(int defaultLimit, String message, boolean checkMainhand) {
+    public void equippedEnchantedItemLimit(int defaultLimit, @Nullable String message, boolean checkMainhand) {
         RecipeBuilder builder = this.recipeBuilder(PickupLimits.MOD_ID + ":equipped_enchant_limit", defaultLimit)
                 .setLimitMessage(message)
                 .setMatchAnyEnchant()
@@ -131,6 +121,16 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
             return this;
         }
 
+        @RecipeBuilderDescription(
+                example = {
+                        @Example("(player, stack, group) -> { return stack.getCount() }")
+                }
+        )
+        public RecipeBuilder setStackLimitFunction(ILimitFunction function) {
+            this.builder.setItemLimitValueFunction(function);
+            return this;
+        }
+
         @RecipeBuilderDescription
         public RecipeBuilder setCheckMainhand() {
             this.builder.setCheckMainhand();
@@ -144,7 +144,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
         }
 
         @RecipeBuilderDescription
-        public RecipeBuilder setLimitMessage(String pickupLimitMessage) {
+        public RecipeBuilder setLimitMessage(@Nullable String pickupLimitMessage) {
             this.builder.setLimitMessage(pickupLimitMessage);
             return this;
         }

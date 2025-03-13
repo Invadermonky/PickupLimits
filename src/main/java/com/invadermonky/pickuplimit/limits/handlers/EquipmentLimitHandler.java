@@ -37,7 +37,7 @@ public class EquipmentLimitHandler {
                     ItemStack baubleStack = handler.getStackInSlot(i);
                     for(EquipmentLimitGroup group : LimitRegistry.getEquipmentLimitGroups(player, baubleStack)) {
                         EquipmentGroupCache groupCache = createOrIncrementCache(player, baubleStack, limitGroups, group);
-                        if(groupCache != null && groupCache.limit < groupCache.getInvCount()) {
+                        if(groupCache != null && groupCache.getLimit() < groupCache.getInvCount()) {
                             //Baubles uses an IItemHandler so removal needs to be handled through the extract method
                             ItemStack extracted = handler.extractItem(i, baubleStack.getCount(), false);
                             handleEquipmentDrop(player, extracted, groupCache, false);
@@ -59,7 +59,7 @@ public class EquipmentLimitHandler {
                         continue;
 
                     EquipmentGroupCache groupCache = createOrIncrementCache(player, stack, limitGroups, group);
-                    if(groupCache != null && groupCache.limit < groupCache.getInvCount()) {
+                    if(groupCache != null && groupCache.getLimit() < groupCache.getInvCount()) {
                         //Equipment is removed fully from the slot instead of partial removal
                         handleEquipmentDrop(player, stack, groupCache, false);
                         player.setItemStackToSlot(equipmentSlot, ItemStack.EMPTY);
@@ -74,7 +74,7 @@ public class EquipmentLimitHandler {
                     continue;
 
                 EquipmentGroupCache groupCache = createOrIncrementCache(player, mhStack, limitGroups, group);
-                if(groupCache != null && groupCache.limit < groupCache.getInvCount()) {
+                if(groupCache != null && groupCache.getLimit() < groupCache.getInvCount()) {
                     //Mainhand equipment is dropped if held
                     handleEquipmentDrop(player, mhStack, groupCache, true);
                     player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
@@ -89,15 +89,15 @@ public class EquipmentLimitHandler {
         if(forceDrop || !player.addItemStackToInventory(stack)) {
             player.dropItem(stack, true);
         }
-        groupCache.shrinkInvCount(player, stack);
+        groupCache.shrinkInvCount(stack);
     }
 
     private static EquipmentGroupCache createOrIncrementCache(EntityPlayer player, ItemStack stack, THashMap<String, EquipmentGroupCache> limitGroups, EquipmentLimitGroup group) {
         if(limitGroups.containsKey(group.getGroupName())) {
-            limitGroups.get(group.getGroupName()).growInvCount(player, stack);
+            limitGroups.get(group.getGroupName()).growInvCount( stack);
         } else {
             EquipmentGroupCache cache = new EquipmentGroupCache(player, group, stack);
-            if(cache.limit >= 0) {
+            if(cache.getLimit() >= 0) {
                 limitGroups.put(group.getGroupName(), cache);
             }
         }

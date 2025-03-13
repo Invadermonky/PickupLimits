@@ -2,6 +2,7 @@ package com.invadermonky.pickuplimit.limits.util;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
+import com.invadermonky.pickuplimit.limits.api.ILimitFunction;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import gnu.trove.map.hash.THashMap;
 import net.darkhax.gamestages.GameStageHelper;
@@ -9,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
@@ -16,7 +18,7 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
     protected final String groupName;
     protected final int defaultLimit;
     protected final NonNullList<ItemStack> groupStacks;
-
+    protected final ILimitFunction stackLimitFunction;
     protected final String pickupMessage;
     protected final Map<ItemStack, Integer> armorLimitAdjustments;
     protected final Map<ItemStack, Integer> baubleLimitAdjustments;
@@ -27,6 +29,7 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
         this.groupName = builder.getGroupName();
         this.defaultLimit = builder.getDefaultLimit();
         this.groupStacks = builder.getGroupStacks();
+        this.stackLimitFunction = builder.getItemLimitFunction();
         this.pickupMessage = builder.getPickupLimitMessage();
         this.armorLimitAdjustments = builder.getArmorLimits();
         this.baubleLimitAdjustments = builder.getBaubleLimits();
@@ -52,8 +55,13 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
         return this.groupName;
     }
 
-    public String getPickupMessage() {
+    public String getLimitMessage() {
         return this.pickupMessage;
+    }
+
+    @Nullable
+    public ILimitFunction getStackLimitFunction() {
+        return this.stackLimitFunction;
     }
 
     public abstract int getStackLimitValue(EntityPlayer player, ItemStack stack);

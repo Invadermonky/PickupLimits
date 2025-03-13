@@ -2,3 +2,6 @@
 # Chat
 chat.pickuplimits:no_equip=You cannot equip %s
 chat.pickuplimits:no_pickup=You cannot carry any more %s
+
+# Wiki
+groovyscript.wiki.pickuplimits.pickup_limit.title=Simple Pickup Limits
