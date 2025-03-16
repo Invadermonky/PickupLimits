@@ -1,14 +1,21 @@
-package com.invadermonky.pickuplimit.limits.util;
+package com.invadermonky.pickuplimit.limits.groups;
 
 import baubles.api.BaublesApi;
 import baubles.api.cap.IBaublesItemHandler;
 import com.invadermonky.pickuplimit.limits.api.ILimitFunction;
+import com.invadermonky.pickuplimit.limits.builders.AbstractLimitBuilder;
+import com.invadermonky.pickuplimit.limits.caches.AbstractGroupCache;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import gnu.trove.map.hash.THashMap;
 import net.darkhax.gamestages.GameStageHelper;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.Tuple;
 
 import javax.annotation.Nullable;
 import java.util.Map;
@@ -19,22 +26,32 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
     protected final int defaultLimit;
     protected final NonNullList<ItemStack> groupStacks;
     protected final ILimitFunction stackLimitFunction;
-    protected final String pickupMessage;
+    protected final String limitMessage;
+    protected final String limitTooltip;
+    protected final boolean allowOverLimit;
     protected final Map<ItemStack, Integer> armorLimitAdjustments;
     protected final Map<ItemStack, Integer> baubleLimitAdjustments;
+    protected final Map<Tuple<Enchantment, Integer>, Integer> enchantmentLimitAdjustments;
+    protected final Map<Tuple<Potion, Integer>, Integer> potionLimitAdjustments;
     protected final Map<String, Integer> stageLimitOverride;
     protected final THashMap<String, NonNullList<ItemStack>> stagedStackRemovals;
+    protected final THashMap<Potion, Integer> encumberedEffects;
 
     public AbstractLimitGroup(T builder) {
         this.groupName = builder.getGroupName();
         this.defaultLimit = builder.getDefaultLimit();
         this.groupStacks = builder.getGroupStacks();
         this.stackLimitFunction = builder.getItemLimitFunction();
-        this.pickupMessage = builder.getPickupLimitMessage();
-        this.armorLimitAdjustments = builder.getArmorLimits();
-        this.baubleLimitAdjustments = builder.getBaubleLimits();
+        this.limitMessage = builder.getLimitMessage();
+        this.limitTooltip = builder.getLimitTooltip();
+        this.allowOverLimit = builder.getAllowOverLimit();
+        this.armorLimitAdjustments = builder.getArmorLimitAdjustments();
+        this.baubleLimitAdjustments = builder.getBaubleLimitAdjustments();
+        this.enchantmentLimitAdjustments = builder.getEnchantmentLimitAdjustments();
+        this.potionLimitAdjustments = builder.getPotionLimitAdjustments();
         this.stageLimitOverride = builder.getStageLimitOverride();
         this.stagedStackRemovals = builder.getStagedStackRemovals();
+        this.encumberedEffects = builder.getEncumberedEffects();
         this.cleanLists();
     }
 
@@ -42,6 +59,8 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
         this.groupStacks.removeIf(ItemStack::isEmpty);
         this.armorLimitAdjustments.keySet().removeIf(ItemStack::isEmpty);
         this.baubleLimitAdjustments.keySet().removeIf(ItemStack::isEmpty);
+        this.enchantmentLimitAdjustments.keySet().removeIf(Objects::isNull);
+        this.potionLimitAdjustments.keySet().removeIf(Objects::isNull);
         this.stageLimitOverride.keySet().removeIf(stage -> stage == null || stage.trim().isEmpty());
         this.stagedStackRemovals.entrySet().removeIf(entry -> {
             if(entry.getKey() == null || entry.getKey().trim().isEmpty())
@@ -49,6 +68,7 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
             entry.getValue().removeIf(ItemStack::isEmpty);
             return entry.getValue().isEmpty();
         });
+        this.encumberedEffects.keySet().removeIf(Objects::isNull);
     }
 
     public String getGroupName() {
@@ -56,7 +76,15 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
     }
 
     public String getLimitMessage() {
-        return this.pickupMessage;
+        return this.limitMessage;
+    }
+
+    public boolean hasLimitTooltip() {
+        return this.getLimitTooltip() != null;
+    }
+
+    public String getLimitTooltip() {
+        return this.limitTooltip;
     }
 
     @Nullable
@@ -68,16 +96,26 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
 
     public int getLimit(EntityPlayer player) {
         int limit = this.getLimitWithStageOverride(player);
+
         if(limit < 0) {
             return -1;
         }
 
         for(ItemStack armorStack : player.getArmorInventoryList()) {
-            //Handling Armor Limit Adjustments
             for(ItemStack limitArmor : this.armorLimitAdjustments.keySet()) {
+                //Handling Armor Limit Adjustments
                 if(ItemStack.areItemsEqualIgnoreDurability(armorStack, limitArmor) && (!limitArmor.hasTagCompound() || ItemStack.areItemStackTagsEqual(armorStack, limitArmor))) {
                     limit += this.armorLimitAdjustments.get(limitArmor);
-                    break;
+                }
+
+                //Handling Enchantment Limit Adjustments
+                if(!this.enchantmentLimitAdjustments.isEmpty() && armorStack.isItemEnchanted()) {
+                    for(Tuple<Enchantment, Integer> limitPair : this.enchantmentLimitAdjustments.keySet()) {
+                        int enchLevel = EnchantmentHelper.getEnchantmentLevel(limitPair.getFirst(), armorStack);
+                        if(enchLevel != -1 && (limitPair.getSecond() == -1 || limitPair.getSecond() == enchLevel)) {
+                            limit += this.enchantmentLimitAdjustments.get(limitPair);
+                        }
+                    }
                 }
             }
         }
@@ -92,6 +130,13 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
                         limit += this.baubleLimitAdjustments.get(bauble);
                     }
                 }
+            }
+        }
+
+        for(Tuple<Potion, Integer> limitPair : this.potionLimitAdjustments.keySet()) {
+            PotionEffect effect = player.getActivePotionEffect(limitPair.getFirst());
+            if(effect != null && (limitPair.getSecond() == -1 || limitPair.getSecond() == effect.getAmplifier())) {
+                limit += this.potionLimitAdjustments.get(limitPair);
             }
         }
 
@@ -131,16 +176,24 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
 
     public abstract boolean matches(EntityPlayer player, ItemStack stack);
 
+    /**
+     * Returns true if the item was dropped into the world, false if it is still in the player's inventory.
+     */
+    public abstract boolean handleLimitDrop(EntityPlayer player, ItemStack stack, AbstractGroupCache<?> groupCache, boolean dropItem);
+
+    public boolean shouldItemBeDropped() {
+        return this.encumberedEffects.isEmpty() || this.allowOverLimit;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof AbstractLimitGroup)) return false;
         AbstractLimitGroup<?> that = (AbstractLimitGroup<?>) o;
-        return Objects.equals(this.getGroupName(), that.getGroupName());
+        return Objects.equals(getGroupName(), that.getGroupName());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(this.getGroupName());
+        return Objects.hashCode(getGroupName());
     }
 }

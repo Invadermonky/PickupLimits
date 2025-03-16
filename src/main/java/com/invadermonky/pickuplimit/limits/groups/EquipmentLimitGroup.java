@@ -1,15 +1,20 @@
-package com.invadermonky.pickuplimit.limits;
+package com.invadermonky.pickuplimit.limits.groups;
 
+import com.invadermonky.pickuplimit.config.ConfigHandlerPL;
+import com.invadermonky.pickuplimit.handlers.CommonEventHandler;
 import com.invadermonky.pickuplimit.limits.builders.EquipmentLimitBuilder;
-import com.invadermonky.pickuplimit.limits.util.AbstractLimitGroup;
+import com.invadermonky.pickuplimit.limits.caches.AbstractGroupCache;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import gnu.trove.set.hash.THashSet;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.SoundCategory;
 
 import java.util.Map;
 import java.util.Objects;
@@ -118,4 +123,20 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
         return this.enchantmentMatches(player, stack) || this.itemMatches(player, stack);
     }
 
+    @Override
+    public boolean handleLimitDrop(EntityPlayer player, ItemStack stack, AbstractGroupCache<?> groupCache, boolean dropItem) {
+        if(!this.encumberedEffects.isEmpty()) {
+            final int duration = ConfigHandlerPL.pickup_limits.inventoryCheckInterval + 20;
+            this.encumberedEffects.forEach((potion, amplifier) -> player.addPotionEffect(new PotionEffect(potion, duration, amplifier, true, false)));
+        } else {
+            player.world.playSound(null, player.getPosition(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0f, 1.0f);
+            CommonEventHandler.sendLimitMessage(player, stack, groupCache, ConfigHandlerPL.pickup_limits.enableEquipmentLimitMessage);
+            if(dropItem || !player.addItemStackToInventory(stack)) {
+                player.dropItem(stack, true);
+                return true;
+            }
+            groupCache.shrinkInvCount(stack);
+        }
+        return false;
+    }
 }

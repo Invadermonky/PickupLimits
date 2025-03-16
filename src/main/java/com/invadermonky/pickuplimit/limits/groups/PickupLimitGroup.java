@@ -1,9 +1,12 @@
-package com.invadermonky.pickuplimit.limits;
+package com.invadermonky.pickuplimit.limits.groups;
 
+import com.invadermonky.pickuplimit.config.ConfigHandlerPL;
+import com.invadermonky.pickuplimit.handlers.CommonEventHandler;
 import com.invadermonky.pickuplimit.limits.builders.PickupLimitBuilder;
-import com.invadermonky.pickuplimit.limits.util.AbstractLimitGroup;
+import com.invadermonky.pickuplimit.limits.caches.AbstractGroupCache;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class PickupLimitGroup extends AbstractLimitGroup<PickupLimitBuilder> {
@@ -29,6 +32,20 @@ public class PickupLimitGroup extends AbstractLimitGroup<PickupLimitBuilder> {
                     }
                 }
             }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean handleLimitDrop(EntityPlayer player, ItemStack stack, AbstractGroupCache<?> groupCache, boolean dropItem) {
+        CommonEventHandler.sendLimitMessage(player, stack, groupCache, ConfigHandlerPL.pickup_limits.enablePickupLimitMessage);
+        if (!this.encumberedEffects.isEmpty()) {
+            final int duration = ConfigHandlerPL.pickup_limits.inventoryCheckInterval + 20;
+            this.encumberedEffects.forEach((potion, amplifier) -> player.addPotionEffect(new PotionEffect(potion, duration, amplifier, true, false)));
+        } else if(dropItem) {
+            player.dropItem(stack, true);
+            groupCache.shrinkInvCount(stack);
+            return true;
         }
         return false;
     }

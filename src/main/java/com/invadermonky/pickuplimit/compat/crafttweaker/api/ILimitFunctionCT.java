@@ -6,7 +6,7 @@ import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.player.IPlayer;
 import stanhebben.zenscript.annotations.ZenClass;
 
-@ZenClass(LibZenClasses.ILimitFunction)
+@ZenClass(LibZenClasses.ILimitValueFunction)
 @ZenRegister
 public interface ILimitFunctionCT {
     int process(IPlayer player, IItemStack stack, ILimitGroupCT group);

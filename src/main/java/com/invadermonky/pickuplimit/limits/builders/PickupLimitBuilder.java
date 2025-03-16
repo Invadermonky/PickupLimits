@@ -1,7 +1,6 @@
 package com.invadermonky.pickuplimit.limits.builders;
 
-import com.invadermonky.pickuplimit.limits.PickupLimitGroup;
-import com.invadermonky.pickuplimit.limits.util.AbstractLimitBuilder;
+import com.invadermonky.pickuplimit.limits.groups.PickupLimitGroup;
 import com.invadermonky.pickuplimit.util.StringHelper;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import net.minecraft.item.ItemStack;

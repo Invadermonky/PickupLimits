@@ -1,82 +1,53 @@
 package com.invadermonky.pickuplimit.compat.crafttweaker.limits;
 
+import com.invadermonky.pickuplimit.compat.crafttweaker.api.ILimitBuilderCT;
 import com.invadermonky.pickuplimit.limits.builders.PickupLimitBuilder;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
 import com.invadermonky.pickuplimit.util.libs.LibZenClasses;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
+import crafttweaker.CraftTweakerAPI;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.oredict.IOreDictEntry;
 import net.minecraftforge.fml.common.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
-@ZenRegister
 @ZenClass(LibZenClasses.PickupLimitBuilder)
-public class PickupLimitBuilderCT {
-    private PickupLimitBuilder builder;
-
+@ZenRegister
+public class PickupLimitBuilderCT extends ILimitBuilderCT<PickupLimitBuilderCT, PickupLimitBuilder> {
     public PickupLimitBuilderCT(String groupName, int defaultLimit) {
-        this.builder = new PickupLimitBuilder(groupName, defaultLimit);
+        super(new PickupLimitBuilder(groupName, defaultLimit));
     }
 
-    @ZenMethod
-    public PickupLimitBuilderCT addStacks(IItemStack... stacks) {
-        this.builder.addStacksToGroup(CraftTweakerMC.getItemStacks(stacks));
+    @Override
+    public PickupLimitBuilderCT getThis() {
         return this;
     }
 
     @ZenMethod
     public PickupLimitBuilderCT addOreDict(IOreDictEntry oreDictEntry) {
-        this.builder.addOreDictToGroup(oreDictEntry.getName());
+        this.getBuilder().addOreDictToGroup(oreDictEntry.getName());
         return this;
     }
 
-    @ZenMethod
-    public PickupLimitBuilderCT setLimitMessage(String message) {
-        this.builder.setLimitMessage(message);
-        return this;
-    }
-
-    @ZenMethod
-    public PickupLimitBuilderCT addArmorLimitAdjustment(IItemStack armorStack, int adjustment) {
-        this.builder.addArmorLimitAdjustment(CraftTweakerMC.getItemStack(armorStack), adjustment);
-        return this;
-    }
-
-    @ZenMethod
-    @Optional.Method(modid = ModIds.ConstIds.baubles)
-    public PickupLimitBuilderCT addBaubleLimitAdjustment(IItemStack baubleStack, int adjustment) {
-        this.builder.addBaubleLimitAdjustment(CraftTweakerMC.getItemStack(baubleStack), adjustment);
-        return this;
-    }
-
-    @ZenMethod
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
-    public PickupLimitBuilderCT addStageLimitOverride(String stageName, int limitOverride) {
-        this.builder.addStageLimitOverride(stageName, limitOverride);
-        return this;
-    }
-
     @ZenMethod
-    @Optional.Method(modid = ModIds.ConstIds.gamestages)
-    public PickupLimitBuilderCT addStagedStackRemovals(String stageName, IItemStack... stacks) {
-        this.builder.addStagedStackGroupRemoval(stageName, CraftTweakerMC.getItemStacks(stacks));
-        return this;
-    }
-
-    @ZenMethod
-    @Optional.Method(modid = ModIds.ConstIds.gamestages)
     public PickupLimitBuilderCT addStagedOreRemovals(String stageName, IOreDictEntry... oreDictEntries) {
         for(IOreDictEntry oreDictEntry : oreDictEntries) {
-            this.builder.addStagedOreGroupRemoval(stageName, oreDictEntry.getName());
+            this.getBuilder().addStagedOreGroupRemoval(stageName, oreDictEntry.getName());
         }
         return this;
     }
 
-    @ZenMethod
-    public void build() {
-        LimitRegistry.addPickupLimitGroup(this.builder.build());
+    @Override
+    public void register() {
+        CraftTweakerAPI.logInfo(String.format("Registering Pickup Limit group '%s'", this.getBuilder().getGroupName()));
+        if(LimitRegistry.getAllEquipmentLimitGroups().containsKey(this.getBuilder().getGroupName())) {
+            CraftTweakerAPI.logWarning("Duplicate group name found. Previous limit group will be overwritten.");
+        }
+        if(this.getBuilder().getGroupStacks().isEmpty()) {
+            CraftTweakerAPI.logWarning("Pickup limit group is empty. No items or valid oreDicts are registered.");
+        }
+        LimitRegistry.addPickupLimitGroup(this.getBuilder().build());
     }
 }

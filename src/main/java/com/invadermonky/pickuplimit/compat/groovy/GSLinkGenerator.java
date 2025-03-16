@@ -16,7 +16,7 @@ public class GSLinkGenerator extends BasicLinkGenerator {
 
     @Override
     protected String domain() {
-        return "https://github.com/Invadermonky/PickupLimit";
+        return "https://github.com/Invadermonky/PickupLimit/";
     }
 
 }

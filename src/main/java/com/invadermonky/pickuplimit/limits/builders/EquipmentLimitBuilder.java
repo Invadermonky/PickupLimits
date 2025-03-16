@@ -1,7 +1,6 @@
 package com.invadermonky.pickuplimit.limits.builders;
 
-import com.invadermonky.pickuplimit.limits.EquipmentLimitGroup;
-import com.invadermonky.pickuplimit.limits.util.AbstractLimitBuilder;
+import com.invadermonky.pickuplimit.limits.groups.EquipmentLimitGroup;
 import com.invadermonky.pickuplimit.util.StringHelper;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import gnu.trove.map.hash.THashMap;
@@ -85,7 +84,7 @@ public class EquipmentLimitBuilder extends AbstractLimitBuilder<EquipmentLimitBu
     }
 
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
-    public EquipmentLimitBuilder addStagedEnchantRemoval(String stageName, Enchantment... enchantments) {
+    public EquipmentLimitBuilder addStagedEnchantmentRemoval(String stageName, Enchantment... enchantments) {
         Set<Enchantment> enchants = new HashSet<>(Arrays.asList(enchantments));
         enchants.removeIf(Objects::isNull);
         if(this.stagedEnchantRemovals.containsKey(stageName)) {

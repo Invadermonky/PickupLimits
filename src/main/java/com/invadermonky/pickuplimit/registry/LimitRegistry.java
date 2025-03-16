@@ -1,7 +1,8 @@
 package com.invadermonky.pickuplimit.registry;
 
-import com.invadermonky.pickuplimit.limits.EquipmentLimitGroup;
-import com.invadermonky.pickuplimit.limits.PickupLimitGroup;
+import com.invadermonky.pickuplimit.limits.groups.AbstractLimitGroup;
+import com.invadermonky.pickuplimit.limits.groups.EquipmentLimitGroup;
+import com.invadermonky.pickuplimit.limits.groups.PickupLimitGroup;
 import com.invadermonky.pickuplimit.util.LogHelper;
 import gnu.trove.map.hash.THashMap;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,6 +49,19 @@ public class LimitRegistry {
             }
         }
         return pickupLimitGroups;
+    }
+
+    /**
+     * Returns all limit groups associated with this
+     * @param player
+     * @param stack
+     * @return
+     */
+    public static List<AbstractLimitGroup<?>> getLimitGroups(EntityPlayer player, ItemStack stack) {
+        List<AbstractLimitGroup<?>> groups = new ArrayList<>();
+        groups.addAll(getEquipmentLimitGroups(player, stack));
+        groups.addAll(getPickupLimitGroups(player, stack));
+        return groups;
     }
 
     public static THashMap<String, EquipmentLimitGroup> getAllEquipmentLimitGroups() {

@@ -3,5 +3,14 @@
 chat.pickuplimits:no_equip=You cannot equip %s
 chat.pickuplimits:no_pickup=You cannot carry any more %s
 
+# Tooltips
+tooltip.pickuplimits:limits=Hold SHIFT to display limits
+
 # Wiki
-groovyscript.wiki.pickuplimits.pickup_limit.title=Simple Pickup Limits
+groovyscript.wiki.pickuplimits.equipment_limit.title=Equipment Limits
+groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit=Simple Equipment Limit
+groovyscript.wiki.pickuplimits.equipment_limit.simpleEnchantmentLimit=Simple Enchantment Limit
+groovyscript.wiki.pickuplimits.equipment_limit.equippedEnchantedItemLimit=Simple Enchanted Item Limit
+groovyscript.wiki.pickuplimits.pickup_limit.title=Pickup Limits
+groovyscript.wiki.pickuplimits.pickup_limit.simplePickupLimit=Simple Pickup Limit
+groovyscript.wiki.pickuplimits.pickup_limit.pickupLimitBuilder=Pickup Limit Builder

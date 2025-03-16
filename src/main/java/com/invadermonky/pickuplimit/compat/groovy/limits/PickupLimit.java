@@ -4,11 +4,10 @@ import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.documentation.annotations.*;
 import com.cleanroommc.groovyscript.helper.ingredient.OreDictIngredient;
-import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import com.invadermonky.pickuplimit.PickupLimits;
-import com.invadermonky.pickuplimit.limits.PickupLimitGroup;
 import com.invadermonky.pickuplimit.limits.builders.PickupLimitBuilder;
+import com.invadermonky.pickuplimit.limits.groups.PickupLimitGroup;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import net.minecraft.item.ItemStack;
@@ -17,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 
 @RegistryDescription(linkGenerator = PickupLimits.MOD_ID)
 public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
+    //TODO: Finish method descriptions for GroovyScript wiki
+
     @Override
     @GroovyBlacklist
     public void onReload() {
@@ -30,7 +31,10 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
 
     @MethodDescription(
             type = MethodDescription.Type.ADDITION,
-            example = {@Example("'stone', 256, item('minecraft:stone'), item('minecraft:cobblestone')")}
+            example = {
+                    @Example("'stone', 256, item('minecraft:stone'), item('minecraft:cobblestone')")
+            },
+            priority = 1000
     )
     public void simplePickupLimit(String groupName, int defaultLimit, ItemStack... stacks) {
         this.simplePickupLimit(groupName, defaultLimit, null, stacks);
@@ -38,7 +42,11 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
 
     @MethodDescription(
             type = MethodDescription.Type.ADDITION,
-            example = {@Example("'stone', 256, 'You cannot carry any more stone', item('minecraft:stone'), item('minecraft:cobblestone')")}
+            example = {
+                    @Example("'stone', 256, 'your.translation.key', item('minecraft:stone'), item('minecraft:cobblestone')"),
+                    @Example("'stone', 256, 'You cannot carry any more stone', item('minecraft:stone'), item('minecraft:cobblestone')")
+            },
+            priority = 1000
     )
     public void simplePickupLimit(String groupName, int defaultLimit, @Nullable String message, ItemStack... stacks) {
         this.recipeBuilder(groupName, defaultLimit)
@@ -49,7 +57,8 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
 
     @MethodDescription(
             type = MethodDescription.Type.ADDITION,
-            example = {@Example("'gems', 32, ore('gemDiamond'), ore('gemEmerald')")}
+            example = {@Example("'gems', 32, ore('gemDiamond'), ore('gemEmerald')")},
+            priority = 1001
     )
     public void simplePickupLimit(String groupName, int defaultLimit, OreDictIngredient... oreDicts) {
         this.simplePickupLimit(groupName, defaultLimit, null, oreDicts);
@@ -58,8 +67,10 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
     @MethodDescription(
             type = MethodDescription.Type.ADDITION,
             example = {
+                    @Example("'gems', 32, 'your.translation.key', ore('gemDiamond'), ore('gemEmerald')"),
                     @Example("'gems', 32, 'Gems are falling out of your pockets', ore('gemDiamond'), ore('gemEmerald')")
-            }
+            },
+            priority = 1001
     )
     public void simplePickupLimit(String groupName, int defaultLimit, @Nullable String message, OreDictIngredient... oreDicts) {
         RecipeBuilder builder = new RecipeBuilder(groupName, defaultLimit);
@@ -71,91 +82,54 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
     }
 
     @RecipeBuilderDescription
-    @MethodDescription(
-            type = MethodDescription.Type.ADDITION,
-            priority = 1001
-    )
     public RecipeBuilder pickupLimitBuilder(String groupName, int defaultLimit) {
         return new RecipeBuilder(groupName, defaultLimit);
     }
 
+    //###########################################################################
+    //                                  Builder
+    //###########################################################################
 
-
-    public static class RecipeBuilder extends AbstractRecipeBuilder<PickupLimitGroup> {
-        private final PickupLimitBuilder builder;
+    public static class RecipeBuilder extends AbstractLimitRecipeBuilder<RecipeBuilder, PickupLimitBuilder, PickupLimitGroup> {
 
         @GroovyBlacklist
         public RecipeBuilder(String groupName, int defaultLimit) {
-            this.builder = new PickupLimitBuilder(groupName, defaultLimit);
+            super(new PickupLimitBuilder(groupName, defaultLimit));
         }
 
-        @RecipeBuilderDescription
-        public RecipeBuilder addStacks(ItemStack... stacks) {
-            this.builder.addStacksToGroup(stacks);
+        @GroovyBlacklist
+        @Override
+        public RecipeBuilder getThis() {
             return this;
         }
 
-        @RecipeBuilderDescription
+        @RecipeBuilderMethodDescription
         public RecipeBuilder addOreDict(OreDictIngredient oreDict) {
-            this.builder.addOreDictToGroup(oreDict.getOreDict());
-            return this;
-        }
-
-        @RecipeBuilderDescription
-        public RecipeBuilder setLimitMessage(@Nullable String pickupLimitMessage) {
-            this.builder.setLimitMessage(pickupLimitMessage);
-            return this;
-        }
-
-        @RecipeBuilderDescription
-        public RecipeBuilder addArmorLimitAdjustment(ItemStack stack, int adjustment) {
-            this.builder.addArmorLimitAdjustment(stack, adjustment);
-            return this;
-        }
-
-        @Optional.Method(modid = ModIds.ConstIds.baubles)
-        @RecipeBuilderDescription
-        public RecipeBuilder addBaubleLimitAdjustment(ItemStack stack, int adjustment) {
-            this.builder.addBaubleLimitAdjustment(stack, adjustment);
+            this.getBuilder().addOreDictToGroup(oreDict.getOreDict());
             return this;
         }
 
         @Optional.Method(modid = ModIds.ConstIds.gamestages)
-        @RecipeBuilderDescription
-        public RecipeBuilder addStageLimitOverride(String stageName, int limitOverride) {
-            this.builder.addStageLimitOverride(stageName, limitOverride);
-            return this;
-        }
-
-        @Optional.Method(modid = ModIds.ConstIds.gamestages)
-        @RecipeBuilderDescription
-        public RecipeBuilder addStagedStackRemoval(String stageName, ItemStack... stacks) {
-            this.builder.addStagedStackGroupRemoval(stageName, stacks);
-            return this;
-        }
-
-        @Optional.Method(modid = ModIds.ConstIds.gamestages)
-        @RecipeBuilderDescription
+        @RecipeBuilderMethodDescription
         public RecipeBuilder addStagedOreRemovals(String stageName, OreDictIngredient... oreDictIngredients) {
             for(OreDictIngredient oreDictIngredient : oreDictIngredients) {
-                this.builder.addStagedOreGroupRemoval(stageName, oreDictIngredient.getOreDict());
+                this.getBuilder().addStagedOreGroupRemoval(stageName, oreDictIngredient.getOreDict());
             }
             return this;
         }
 
         @Override
-        public String getErrorMsg() {
-            return "Error creating new Pickup Limit group.";
+        public void validate(GroovyLog.Msg msg) {
+            msg.add(LimitRegistry.getAllEquipmentLimitGroups().containsKey(this.getBuilder().getGroupName()), "Duplicate group name found for pickup limit group " + this.getBuilder().getGroupName());
+            msg.add(this.getBuilder().getGroupStacks().isEmpty(), "Pickup limit group is empty. No items or valid oreDicts are registered");
         }
-
-        @Override
-        public void validate(GroovyLog.Msg msg) {}
 
         @Override
         @RecipeBuilderRegistrationMethod
         public @Nullable PickupLimitGroup register() {
+            GroovyLog.get().info(String.format("Registering Pickup Limit group: '%s'", this.getBuilder().getGroupName()));
             if(!validate()) return null;
-            PickupLimitGroup group = this.builder.build();
+            PickupLimitGroup group = this.getBuilder().build();
             LimitRegistry.addPickupLimitGroup(group);
             return group;
         }

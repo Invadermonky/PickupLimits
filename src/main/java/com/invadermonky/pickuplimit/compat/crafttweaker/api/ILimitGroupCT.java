@@ -6,6 +6,7 @@ import crafttweaker.api.item.IItemStack;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenGetter;
 import stanhebben.zenscript.annotations.ZenMethod;
+import stanhebben.zenscript.annotations.ZenSetter;
 
 @ZenClass(LibZenClasses.ILimitGroup)
 @ZenRegister
@@ -14,11 +15,20 @@ public interface ILimitGroupCT {
     String getName();
 
     @ZenGetter("message")
-    String getMessage();
+    String getLimitMessage();
+
+    @ZenSetter("message")
+    void setLimitMessage(String message);
+
+    @ZenGetter("count")
+    int getInvCount();
+
+    @ZenSetter("count")
+    void setInvCount(int invCount);
 
     @ZenGetter("limit")
     int getLimit();
 
     @ZenMethod
-    int getStackLimitValue(IItemStack stack);
+    int getDefaultLimitValue(IItemStack stack);
 }

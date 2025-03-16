@@ -1,6 +1,6 @@
 package com.invadermonky.pickuplimit.limits.api;
 
-import com.invadermonky.pickuplimit.limits.util.AbstractGroupCache;
+import com.invadermonky.pickuplimit.limits.caches.AbstractGroupCache;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
