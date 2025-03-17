@@ -3,16 +3,22 @@ package com.invadermonky.pickuplimit.compat.groovy.limits;
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.GroovyLog;
 import com.cleanroommc.groovyscript.api.documentation.annotations.*;
+import com.cleanroommc.groovyscript.helper.ingredient.OreDictIngredient;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
 import com.invadermonky.pickuplimit.PickupLimits;
+import com.invadermonky.pickuplimit.limits.api.ILimitFunction;
 import com.invadermonky.pickuplimit.limits.builders.EquipmentLimitBuilder;
 import com.invadermonky.pickuplimit.limits.groups.EquipmentLimitGroup;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraftforge.fml.common.Optional;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Map;
 
 @RegistryDescription(linkGenerator = PickupLimits.MOD_ID)
 public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
@@ -123,6 +129,45 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
     //###########################################################################
 
     public static class RecipeBuilder extends AbstractLimitRecipeBuilder<RecipeBuilder, EquipmentLimitBuilder, EquipmentLimitGroup> {
+        @Property(comp = @Comp(gte = 0), priority = 1000, value = "groovyscript.wiki.pickuplimits.limit_builder.addStacks.value")
+        private List<ItemStack> addStacks;
+        @Property(comp = @Comp(gte = 0), priority = 1001)
+        private List<Enchantment> addEnchantments;
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1002)
+        private boolean setMatchAnyEnchant;
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1003)
+        private boolean setIgnoreItemEnchantmentCount;
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1004)
+        private boolean setIgnoreEnchantmentLevel;
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1005)
+        private boolean setCheckMainhand;
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1006)
+        private boolean setCheckOffhand;
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1007, value = "groovyscript.wiki.pickuplimits.limit_builder.setStackLimitFunction.value")
+        private ILimitFunction setStackLimitFunction;
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1008, value = "groovyscript.wiki.pickuplimits.limit_builder.setAllowOverLimit.value")
+        private boolean setAllowOverLimit;
+        @Property(comp = @Comp(gte = 0), priority = 1008, value = "groovyscript.wiki.pickuplimits.limit_builder.addEncumberedEffect.value")
+        private List<Potion> addEncumberedEffect;
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1009, value = "groovyscript.wiki.pickuplimits.limit_builder.setLimitMessage.value")
+        private String setLimitMessage;
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1010,  value = "groovyscript.wiki.pickuplimits.limit_builder.setLimitTooltip.value")
+        private String setLimitTooltip;
+        @Property(comp = @Comp(gte = 0), priority = 10011, value = "groovyscript.wiki.pickuplimits.limit_builder.addArmorLimitAdjustment.value")
+        private Map<ItemStack, Integer> addArmorLimitAdjustment;
+        @Property(comp = @Comp(gte = 0), priority = 1012, value = "groovyscript.wiki.pickuplimits.limit_builder.addBaubleLimitAdjustment.value")
+        private Map<ItemStack, Integer> addBaubleLimitAdjustment;
+        @Property(comp = @Comp(gte = 0), priority = 1013, value = "groovyscript.wiki.pickuplimits.limit_builder.addEnchantmentLimitAdjustment.value")
+        private Map<Enchantment, Integer> addEnchantmentLimitAdjustment;
+        @Property(comp = @Comp(gte = 0), priority = 1014, value = "groovyscript.wiki.pickuplimits.limit_builder.addPotionLimitAdjustment.value")
+        private Map<Potion, Integer> addPotionLimitAdjustment;
+        @Property(comp = @Comp(gte = 0), priority = 1015, value = "groovyscript.wiki.pickuplimits.limit_builder.addStagedLimitOverride.value")
+        private Map<String, Integer> addStagedLimitOverride;
+        @Property(comp = @Comp(gte = 0), priority = 1016, value = "groovyscript.wiki.pickuplimits.limit_builder.addStagedStackRemovals.value")
+        private Map<String, List<ItemStack>> addStagedStackRemovals;
+        @Property(comp = @Comp(gte = 0), priority = 1017)
+        private Map<String, List<OreDictIngredient>> addStagedEnchantmentRemovals;
+
         @GroovyBlacklist
         public RecipeBuilder(String groupName, int defaultLimit) {
             super(new EquipmentLimitBuilder(groupName, defaultLimit));

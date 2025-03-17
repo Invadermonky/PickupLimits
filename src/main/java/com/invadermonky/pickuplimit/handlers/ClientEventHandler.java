@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber(modid = PickupLimits.MOD_ID, value = Side.CLIENT)
 public class ClientEventHandler {
@@ -27,16 +28,17 @@ public class ClientEventHandler {
         EntityPlayer player = event.getEntityPlayer();
         ItemStack stack = event.getItemStack();
         if (player != null && !stack.isEmpty()) {
-            List<AbstractLimitGroup<?>> groups = LimitRegistry.getLimitGroups(event.getEntityPlayer(), event.getItemStack());
+            List<AbstractLimitGroup<?>> groups = LimitRegistry.getLimitGroups(event.getEntityPlayer(), event.getItemStack()).stream()
+                    .filter(AbstractLimitGroup::hasLimitTooltip)
+                    .collect(Collectors.toList());
+
             if (groups.isEmpty())
                 return;
 
-            if (!GuiScreen.isShiftKeyDown()) {
+            if (!GuiScreen.isShiftKeyDown() && ConfigHandlerPL.pickup_limits.tooltipMessageRequiresShift) {
                 event.getToolTip().add(I18n.format(StringHelper.getTranslationKey("limits", "tooltip")));
             } else {
-                groups.stream()
-                        .filter(AbstractLimitGroup::hasLimitTooltip)
-                        .forEach(group -> {
+                groups.forEach(group -> {
                             String tooltip = I18n.format(group.getLimitTooltip(), group.getLimit(player));
                             if (tooltip.matches("Format error: .*")) {
                                 tooltip = I18n.format(group.getLimitTooltip());

@@ -13,7 +13,8 @@
   - this method allows adjusting group limits based on active potion effects
 - added new builder method `addEncumberedEffect(Potion,int)`
   - this method is a simple way to allow players to exceed group limits, but will inflict them with potion effects (such as slowness or weakness)
-- exposed `setItemLimitValueFunction(ILimitFunction)` to CrT and GS Pickup Limit builders
+- added `setItemLimitValueFunction(ILimitFunction)` to CrT and GS Pickup Limit builders
+- added GroovyScript wiki support
 ### Changed
 - pickup builder and equipment builder for CrT and GS can use either `build()` or `register()` to register the limit group
 - merged identical scripting builder methods into parent class
