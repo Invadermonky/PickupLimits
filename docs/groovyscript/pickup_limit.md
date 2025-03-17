@@ -1,7 +1,7 @@
 ---
 title: "Pickup Limits"
 titleTemplate: "Pickup Limits | CleanroomMC"
-description: "Pickup Limits are limit groups that restrict the number of items a player is allowed to carry. PickupLimits scan the player's inventory and calculate a total based on number of items that match each limit group. Should the player exceed the maximum allowable limit, excess items will be dropped into the world."
+description: "Pickup Limits are limit groups that restrict the number of items a player is allowed to carry. PickupLimits scan the player's inventory and calculate a total based on number of items that match each limit group. Should the player exceed the maximum allowable limit, excess items will be dropped into the world. For more information and examples, you can check out the Pickup Limits GitHub Wiki https://github.com/Invadermonky/PickupLimits/wiki."
 source_code_link: "https://github.com/CleanroomMC/GroovyScript/blob/master/src/main/java/com/invadermonky/pickuplimit/compat/groovy/limits/PickupLimit.java"
 ---
 
@@ -9,7 +9,7 @@ source_code_link: "https://github.com/CleanroomMC/GroovyScript/blob/master/src/m
 
 ## Description
 
-Pickup Limits are limit groups that restrict the number of items a player is allowed to carry. PickupLimits scan the player's inventory and calculate a total based on number of items that match each limit group. Should the player exceed the maximum allowable limit, excess items will be dropped into the world.
+Pickup Limits are limit groups that restrict the number of items a player is allowed to carry. PickupLimits scan the player's inventory and calculate a total based on number of items that match each limit group. Should the player exceed the maximum allowable limit, excess items will be dropped into the world. For more information and examples, you can check out the Pickup Limits GitHub Wiki https://github.com/Invadermonky/PickupLimits/wiki.
 
 ## Identifier
 
@@ -25,25 +25,25 @@ mods.pickuplimits.PickupLimit
 
 ## Adding Recipes
 
-- Simple ItemStack Pickup Limit Group:
+- Creates a simple ItemStack inventory carry limit group:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.pickup_limit.simplePickupLimit(String, int, ItemStack...)
     ```
 
-- Simple ItemStack Pickup Limit Group with Limit Message:
+- Creates a simple ItemStack inventory carry limit group with limit message:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.pickup_limit.simplePickupLimit(String, int, String, ItemStack...)
     ```
 
-- Simple Ore Dictionary Limit Group:
+- Creates a simple Ore Dictionary inventory carry limit group:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.pickup_limit.simplePickupLimit(String, int, OreDictIngredient...)
     ```
 
-- Simple Ore Dictionary Limit Group with Limit Message:
+- Creates a simple Ore Dictionary inventory carry limit group with limit message:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.pickup_limit.simplePickupLimit(String, int, String, OreDictIngredient...)
@@ -53,9 +53,11 @@ mods.pickuplimits.PickupLimit
 ```groovy:no-line-numbers
 mods.pickuplimits.pickup_limit.simplePickupLimit('stone', 256, item('minecraft:stone'), item('minecraft:cobblestone'))
 mods.pickuplimits.pickup_limit.simplePickupLimit('stone', 256, 'your.translation.key', item('minecraft:stone'), item('minecraft:cobblestone'))
+mods.pickuplimits.pickup_limit.simplePickupLimit('stone', 256, 'You cannot carry any more %s', item('minecraft:stone'), item('minecraft:cobblestone'))
 mods.pickuplimits.pickup_limit.simplePickupLimit('stone', 256, 'You cannot carry any more stone', item('minecraft:stone'), item('minecraft:cobblestone'))
 mods.pickuplimits.pickup_limit.simplePickupLimit('gems', 32, ore('gemDiamond'), ore('gemEmerald'))
 mods.pickuplimits.pickup_limit.simplePickupLimit('gems', 32, 'your.translation.key', ore('gemDiamond'), ore('gemEmerald'))
+mods.pickuplimits.pickup_limit.simplePickupLimit('gems', 32, '%s are falling out of your pockets', ore('gemDiamond'), ore('gemEmerald'))
 mods.pickuplimits.pickup_limit.simplePickupLimit('gems', 32, 'Gems are falling out of your pockets', ore('gemDiamond'), ore('gemEmerald'))
 ```
 
@@ -68,8 +70,6 @@ Just like other recipe types, the Pickup Limits also uses a recipe builder.
 Don't know what a builder is? Check [the builder info page](../../getting_started/builder.md) out.
 
 :::::::::: details mods.pickuplimits.pickup_limit.pickupLimitBuilder() {open id="abstract"}
-- `PickupLimit.RecipeBuilder`. groovyscript.wiki.pickuplimits.pickup_limit.pickupLimitBuilder.value. Requires exactly 1.
-
 - `List<ItemStack>`. <p>You can add ItemStacks to any Limit Group. Additional stacks can be included by separating them with a comma or using repeating `addStacks()` method calls.</p>You can call this method as many times as needed in any order. Requires greater than or equal to 1.
 
     ```groovy:no-line-numbers

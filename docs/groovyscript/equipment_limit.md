@@ -1,7 +1,7 @@
 ---
 title: "Equipment Limits"
 titleTemplate: "Pickup Limits | CleanroomMC"
-description: "groovyscript.wiki.pickuplimits.equipment_limit.description."
+description: "<p>Equipment Limits are a specialized type of Pickup Limit. Where Pickup Limits scan a player's inventory for items and calculate a total based on count, Equipment Limits focus on currently equipped items. The focus on equipped items comes with two major differences from Pickup Limits.</p><p>First, any item found that exceeds the equipment group limit will be unequipped and placed in the player's inventory instead of being dropped on the ground. The only exception to this are items held in the player's mainhand.</p><p>Second, in the place of ore dictionary entries, equipment limit groups allow you to specify limits based on enchantments. This means that limit values per item are calculated slightly differently than normal pickup limits.</p>For more information and examples, you can check out the Pickup Limits GitHub Wiki https://github.com/Invadermonky/PickupLimits/wiki."
 source_code_link: "https://github.com/CleanroomMC/GroovyScript/blob/master/src/main/java/com/invadermonky/pickuplimit/compat/groovy/limits/EquipmentLimit.java"
 ---
 
@@ -9,7 +9,7 @@ source_code_link: "https://github.com/CleanroomMC/GroovyScript/blob/master/src/m
 
 ## Description
 
-groovyscript.wiki.pickuplimits.equipment_limit.description.
+<p>Equipment Limits are a specialized type of Pickup Limit. Where Pickup Limits scan a player's inventory for items and calculate a total based on count, Equipment Limits focus on currently equipped items. The focus on equipped items comes with two major differences from Pickup Limits.</p><p>First, any item found that exceeds the equipment group limit will be unequipped and placed in the player's inventory instead of being dropped on the ground. The only exception to this are items held in the player's mainhand.</p><p>Second, in the place of ore dictionary entries, equipment limit groups allow you to specify limits based on enchantments. This means that limit values per item are calculated slightly differently than normal pickup limits.</p>For more information and examples, you can check out the Pickup Limits GitHub Wiki https://github.com/Invadermonky/PickupLimits/wiki.
 
 ## Identifier
 
@@ -25,37 +25,37 @@ mods.pickuplimits.EquipmentLimit
 
 ## Adding Recipes
 
-- Simple Equipment Limit:
+- Creates a simple equipped item limit Group:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.equipment_limit.simpleEquipmentLimit(String, int, ItemStack...)
     ```
 
-- Simple Equipment Limit:
+- Creates a equipped item limit group with limit message:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.equipment_limit.simpleEquipmentLimit(String, int, String, ItemStack...)
     ```
 
-- Simple Enchantment Limit:
+- Creates a simple equipped item enchantment limit group:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.equipment_limit.simpleEnchantmentLimit(String, int, Enchantment...)
     ```
 
-- Simple Enchantment Limit:
+- Creates a simple equipped item enchantment limit group with limit message:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.equipment_limit.simpleEnchantmentLimit(String, int, String, Enchantment...)
     ```
 
-- Simple Enchanted Item Limit:
+- Creates an equipment limit group restricting the number of enchanted items a player can equip and use at once:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.equipment_limit.equippedEnchantedItemLimit(int, boolean)
     ```
 
-- Simple Enchanted Item Limit:
+- Creates an equipment limit group restricting the number of enchanted items a player can equip and use at once with limit message:
 
     ```groovy:no-line-numbers
     mods.pickuplimits.equipment_limit.equippedEnchantedItemLimit(int, String, boolean)

@@ -40,6 +40,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
             example = {
                     @Example("'diamond_armor', 2, item('minecraft:diamond_helmet'), item('minecraft:diamond_chestplate'), item('minecraft:diamond_leggings'), item('minecraft:diamond_boots')")
             },
+            description = "groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit.description",
             priority = 1000
     )
     public void simpleEquipmentLimit(String groupName, int defaultLimit, ItemStack... stacks) {
@@ -52,6 +53,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
                     @Example("'diamond_armor', 2, 'your.translation.key', item('minecraft:diamond_helmet'), item('minecraft:diamond_chestplate'), item('minecraft:diamond_leggings'), item('minecraft:diamond_boots')"),
                     @Example("'diamond_armor', 2, 'You can only equip two pieces of diamond armor', item('minecraft:diamond_helmet'), item('minecraft:diamond_chestplate'), item('minecraft:diamond_leggings'), item('minecraft:diamond_boots')")
             },
+            description = "groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit.message.description",
             priority = 1000
     )
     public void simpleEquipmentLimit(String groupName, int defaultLimit, @Nullable String message, ItemStack... stacks) {
@@ -66,6 +68,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
             example = {
                     @Example("'protection', 8, enchantment('minecraft:protection')")
             },
+            description = "groovyscript.wiki.pickuplimits.equipment_limit.simpleEnchantmentLimit.description",
             priority = 1001
     )
     public void simpleEnchantmentLimit(String groupName, int defaultLimit, Enchantment... enchants) {
@@ -78,6 +81,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
                     @Example(value = "'protection', 8, 'your.translation.key', enchantment('minecraft:protection')"),
                     @Example(value = "'protection', 8, 'You can only equip up to 8 levels of Protection', enchantment('minecraft:protection')")
             },
+            description = "groovyscript.wiki.pickuplimits.equipment_limit.simpleEnchantmentLimit.message.description",
             priority = 1001
     )
     public void simpleEnchantmentLimit(String groupName, int defaultLimit, @Nullable String message, Enchantment... enchants) {
@@ -93,6 +97,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
             example = {
                     @Example("2, false")
             },
+            description = "groovyscript.wiki.pickuplimits.equipment_limit.equippedEnchantedItemLimit.description",
             priority = 1002
     )
     public void equippedEnchantedItemLimit(int defaultLimit, boolean checkMainhand) {
@@ -105,6 +110,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
                     @Example("2, 'your.translation.key', false"),
                     @Example("2, 'You can only equip two enchanted items', false")
             },
+            description = "groovyscript.wiki.pickuplimits.equipment_limit.equippedEnchantedItemLimit.message.description",
             priority = 1002
     )
     public void equippedEnchantedItemLimit(int defaultLimit, @Nullable String message, boolean checkMainhand) {

@@ -14,7 +14,6 @@ import com.invadermonky.pickuplimit.util.libs.ModIds;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.Tuple;
 import net.minecraftforge.fml.common.Optional;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +51,7 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
             type = MethodDescription.Type.ADDITION,
             example = {
                     @Example("'stone', 256, 'your.translation.key', item('minecraft:stone'), item('minecraft:cobblestone')"),
+                    @Example("'stone', 256, 'You cannot carry any more %s', item('minecraft:stone'), item('minecraft:cobblestone')"),
                     @Example("'stone', 256, 'You cannot carry any more stone', item('minecraft:stone'), item('minecraft:cobblestone')")
             },
             description = "groovyscript.wiki.pickuplimits.pickup_limit.simpleItemPickupLimit.message.description",
@@ -78,6 +78,7 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
             type = MethodDescription.Type.ADDITION,
             example = {
                     @Example("'gems', 32, 'your.translation.key', ore('gemDiamond'), ore('gemEmerald')"),
+                    @Example("'gems', 32, '%s are falling out of your pockets', ore('gemDiamond'), ore('gemEmerald')"),
                     @Example("'gems', 32, 'Gems are falling out of your pockets', ore('gemDiamond'), ore('gemEmerald')")
             },
             description = "groovyscript.wiki.pickuplimits.pickup_limit.simpleOrePickupLimit.message.description",
