@@ -25,7 +25,7 @@ public class PickupLimits {
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
-        if(ModIds.crafttweaker.isLoaded()) MinecraftForge.EVENT_BUS.register(new ModIntegrationCT());
+        if (ModIds.crafttweaker.isLoaded()) MinecraftForge.EVENT_BUS.register(new ModIntegrationCT());
     }
 
     @Mod.EventHandler

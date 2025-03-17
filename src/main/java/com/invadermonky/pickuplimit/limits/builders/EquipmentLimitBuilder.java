@@ -87,7 +87,7 @@ public class EquipmentLimitBuilder extends AbstractLimitBuilder<EquipmentLimitBu
     public EquipmentLimitBuilder addStagedEnchantmentRemoval(String stageName, Enchantment... enchantments) {
         Set<Enchantment> enchants = new HashSet<>(Arrays.asList(enchantments));
         enchants.removeIf(Objects::isNull);
-        if(this.stagedEnchantRemovals.containsKey(stageName)) {
+        if (this.stagedEnchantRemovals.containsKey(stageName)) {
             this.stagedEnchantRemovals.get(stageName).addAll(enchants);
         } else {
             this.stagedEnchantRemovals.put(stageName, enchants);

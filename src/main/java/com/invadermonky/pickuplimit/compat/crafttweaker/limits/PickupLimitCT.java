@@ -28,7 +28,7 @@ public class PickupLimitCT {
     @ZenMethod
     public static void simplePickupLimit(String groupName, int defaultLimit, IOreDictEntry... iOreDictEntries) {
         PickupLimitBuilderCT primer = new PickupLimitBuilderCT(groupName, defaultLimit);
-        for(IOreDictEntry oreDictEntry : iOreDictEntries) {
+        for (IOreDictEntry oreDictEntry : iOreDictEntries) {
             primer.addOreDict(oreDictEntry);
         }
         primer.build();
@@ -37,7 +37,7 @@ public class PickupLimitCT {
     @ZenMethod
     public static void simplePickupLimit(String groupName, int defaultLimit, String message, IOreDictEntry... iOreDictEntries) {
         PickupLimitBuilderCT primer = new PickupLimitBuilderCT(groupName, defaultLimit);
-        for(IOreDictEntry oreDictEntry : iOreDictEntries) {
+        for (IOreDictEntry oreDictEntry : iOreDictEntries) {
             primer.addOreDict(oreDictEntry);
         }
         primer.setLimitMessage(message);

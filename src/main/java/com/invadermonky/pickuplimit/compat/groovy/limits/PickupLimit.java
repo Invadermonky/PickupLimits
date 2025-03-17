@@ -74,7 +74,7 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
     )
     public void simplePickupLimit(String groupName, int defaultLimit, @Nullable String message, OreDictIngredient... oreDicts) {
         RecipeBuilder builder = new RecipeBuilder(groupName, defaultLimit);
-        for(OreDictIngredient oreDict : oreDicts) {
+        for (OreDictIngredient oreDict : oreDicts) {
             builder.addOreDict(oreDict);
         }
         builder.setLimitMessage(message);
@@ -112,7 +112,7 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
         @Optional.Method(modid = ModIds.ConstIds.gamestages)
         @RecipeBuilderMethodDescription
         public RecipeBuilder addStagedOreRemovals(String stageName, OreDictIngredient... oreDictIngredients) {
-            for(OreDictIngredient oreDictIngredient : oreDictIngredients) {
+            for (OreDictIngredient oreDictIngredient : oreDictIngredients) {
                 this.getBuilder().addStagedOreGroupRemoval(stageName, oreDictIngredient.getOreDict());
             }
             return this;
@@ -128,7 +128,7 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
         @RecipeBuilderRegistrationMethod
         public @Nullable PickupLimitGroup register() {
             GroovyLog.get().info(String.format("Registering Pickup Limit group: '%s'", this.getBuilder().getGroupName()));
-            if(!validate()) return null;
+            if (!validate()) return null;
             PickupLimitGroup group = this.getBuilder().build();
             LimitRegistry.addPickupLimitGroup(group);
             return group;

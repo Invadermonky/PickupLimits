@@ -22,6 +22,9 @@ public class ConfigHandlerPL {
         @Config.Comment("Enables sending a message to the player when they are unable to equip an item due to equipment limits.")
         public boolean enableEquipmentLimitMessage = true;
 
+        @Config.Comment("Enables limit tooltips on items. Tooltips must be defined in limit groups builders using the 'setLimitTooltip' method.")
+        public boolean enableTooltipLimitMessage = true;
+
         @Config.RangeInt(min = 1, max = 12000)
         @Config.Comment("The time, in ticks, between each inventory check. The inventory check will scan a player's inventory to ensure\n" +
                 "they have not exceeded any item limits.")
@@ -50,7 +53,7 @@ public class ConfigHandlerPL {
     public static class ConfigChangeListener {
         @SubscribeEvent
         public static void onConfigChange(ConfigChangedEvent.OnConfigChangedEvent event) {
-            if(event.getModID().equals(PickupLimits.MOD_ID)) {
+            if (event.getModID().equals(PickupLimits.MOD_ID)) {
                 ConfigManager.sync(PickupLimits.MOD_ID, Config.Type.INSTANCE);
                 ModTags.syncConfig();
             }

@@ -15,9 +15,10 @@ import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
+//I know it's not an interface, but labeling it as ILimitBuilder is a good indication that it doesn't do anything on its own.
 @ZenClass(LibZenClasses.ILimitBuilder)
 @ZenRegister
-public abstract class ILimitBuilderCT<T extends ILimitBuilderCT<T,S>, S extends AbstractLimitBuilder<?,?>> {
+public abstract class ILimitBuilderCT<T extends ILimitBuilderCT<T, S>, S extends AbstractLimitBuilder<?, ?>> {
     private final S builder;
 
     public ILimitBuilderCT(S builder) {
@@ -133,8 +134,8 @@ public abstract class ILimitBuilderCT<T extends ILimitBuilderCT<T,S>, S extends 
 
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
     @ZenMethod
-    public T addStageLimitOverride(String stageName, int limitOverride) {
-        this.getBuilder().addStageLimitOverride(stageName, limitOverride);
+    public T addStagedLimitOverride(String stageName, int limitOverride) {
+        this.getBuilder().addStagedLimitOverride(stageName, limitOverride);
         return this.getThis();
     }
 

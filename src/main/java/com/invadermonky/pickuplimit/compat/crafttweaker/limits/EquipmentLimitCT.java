@@ -36,11 +36,11 @@ public class EquipmentLimitCT {
     }
 
     @ZenMethod
-    public static void simpleEnchantmentLimit(String groupName, int defaultLimit, String message, IEnchantmentDefinition ... enchantments) {
+    public static void simpleEnchantmentLimit(String groupName, int defaultLimit, String message, IEnchantmentDefinition... enchantments) {
         EquipmentLimitBuilderCT primer = new EquipmentLimitBuilderCT(groupName, defaultLimit)
                 .addEnchantments(enchantments)
                 .setCheckOffhand();
-        if(message != null)
+        if (message != null)
             primer.setLimitMessage(message);
         primer.build();
     }
@@ -51,9 +51,9 @@ public class EquipmentLimitCT {
                 .setMatchAnyEnchant()
                 .setIgnoreItemEnchantmentCount()
                 .setCheckOffhand();
-        if(message != null)
+        if (message != null)
             primer.setLimitMessage(message);
-        if(checkMainhand)
+        if (checkMainhand)
             primer.setCheckMainhand();
         primer.build();
     }

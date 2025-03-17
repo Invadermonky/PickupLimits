@@ -25,7 +25,7 @@ public class PickupLimitBuilder extends AbstractLimitBuilder<PickupLimitBuilder,
      * obtains the specified GameStage.
      *
      * @param stageName The name of the GameStage
-     * @param oreDict The ore dictionary string
+     * @param oreDict   The ore dictionary string
      * @return this
      */
     @Optional.Method(modid = ModIds.ConstIds.gamestages)

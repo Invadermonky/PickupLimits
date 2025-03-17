@@ -30,7 +30,7 @@ public class CommonEventHandler {
 
     @SubscribeEvent
     public static void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
-        if(event.getEntityLiving().ticksExisted % ConfigHandlerPL.pickup_limits.inventoryCheckInterval == 0) {
+        if (event.getEntityLiving().ticksExisted % ConfigHandlerPL.pickup_limits.inventoryCheckInterval == 0) {
             EquipmentLimitHandler.onLivingUpdate(event);
             PickupLimitHandler.onLivingUpdate(event);
         }
@@ -38,17 +38,17 @@ public class CommonEventHandler {
 
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if(ConfigHandlerPL.item_lifetimes.enable && event.getEntity() instanceof EntityItem) {
+        if (ConfigHandlerPL.item_lifetimes.enable && event.getEntity() instanceof EntityItem) {
             ((EntityItem) event.getEntity()).lifespan = ModTags.getItemLifetime(((EntityItem) event.getEntity()).getItem());
         }
     }
 
     public static void sendLimitMessage(EntityPlayer player, ItemStack stack, @Nonnull AbstractGroupCache<?> groupCache, boolean shouldSend) {
-        if(!shouldSend) return;
+        if (!shouldSend) return;
 
         String limitMessage = groupCache.getLimitMessage();
         ITextComponent text = new TextComponentTranslation(limitMessage, stack.getDisplayName());
-        if(text.getFormattedText().matches("^Format error: .*")) {
+        if (text.getFormattedText().matches("^Format error: .*")) {
             text = new TextComponentTranslation(limitMessage);
         }
         player.sendStatusMessage(text, true);

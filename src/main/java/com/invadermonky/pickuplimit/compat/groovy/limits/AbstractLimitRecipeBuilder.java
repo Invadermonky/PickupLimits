@@ -2,7 +2,6 @@ package com.invadermonky.pickuplimit.compat.groovy.limits;
 
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderMethodDescription;
-import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderRegistrationMethod;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RegistryDescription;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
 import com.invadermonky.pickuplimit.PickupLimits;
@@ -18,8 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 @RegistryDescription(linkGenerator = PickupLimits.MOD_ID)
 public abstract class AbstractLimitRecipeBuilder<
-        T extends AbstractLimitRecipeBuilder<T,S,U>,
-        S extends AbstractLimitBuilder<?,?>,
+        T extends AbstractLimitRecipeBuilder<T, S, U>,
+        S extends AbstractLimitBuilder<?, ?>,
         U extends AbstractLimitGroup<S>> extends AbstractRecipeBuilder<U> {
 
     private final S builder;
@@ -100,8 +99,8 @@ public abstract class AbstractLimitRecipeBuilder<
 
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
     @RecipeBuilderMethodDescription
-    public T addStageLimitOverride(String stageName, int limitOverride) {
-        this.getBuilder().addStageLimitOverride(stageName, limitOverride);
+    public T addStagedLimitOverride(String stageName, int limitOverride) {
+        this.getBuilder().addStagedLimitOverride(stageName, limitOverride);
         return this.getThis();
     }
 

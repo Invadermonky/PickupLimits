@@ -19,7 +19,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>, S extends AbstractLimitGroup<?>>{
+public abstract class AbstractLimitBuilder<T extends AbstractLimitBuilder<T, S>, S extends AbstractLimitGroup<?>> {
     protected final String groupName;
     protected final int defaultLimit;
     protected final NonNullList<ItemStack> groupStacks = NonNullList.create();
@@ -31,7 +31,7 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
     protected final Map<ItemStack, Integer> baubleLimitAdjustments = new HashMap<>();
     protected final Map<Tuple<Enchantment, Integer>, Integer> enchantmentLimitAdjustments = new THashMap<>();
     protected final Map<Tuple<Potion, Integer>, Integer> potionLimitAdjustments = new THashMap<>();
-    protected final LinkedHashMap<String,Integer> stageLimitOverride = new LinkedHashMap<>();
+    protected final LinkedHashMap<String, Integer> stageLimitOverride = new LinkedHashMap<>();
     protected final THashMap<String, NonNullList<ItemStack>> stagedStackRemovals = new THashMap<>();
     protected final THashMap<Potion, Integer> encumberedEffects = new THashMap<>();
 
@@ -93,7 +93,7 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
      * @return this
      */
     public T setLimitMessage(String limitMessage) {
-        if(limitMessage != null) {
+        if (limitMessage != null) {
             this.limitMessage = limitMessage;
         }
         return this.getThis();
@@ -110,7 +110,7 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
     }
 
     public T setLimitTooltip(String limitTooltip) {
-        if(limitTooltip != null) {
+        if (limitTooltip != null) {
             this.limitTooltip = limitTooltip;
         }
         return this.getThis();
@@ -142,12 +142,12 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
      * Adds a limit adjustment when the player has the passed armor equipped. This adjustment value can be positive or
      * negative.
      *
-     * @param stack The armor ItemStack
+     * @param stack      The armor ItemStack
      * @param adjustment The limit adjustment when the armor is equipped
      * @return
      */
     public T addArmorLimitAdjustment(ItemStack stack, int adjustment) {
-        if(!stack.isEmpty()) {
+        if (!stack.isEmpty()) {
             this.armorLimitAdjustments.put(stack, adjustment);
         } else {
             LogHelper.error("Error adding armor limit for " + stack.getItem().getRegistryName());
@@ -166,13 +166,13 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
      * Adds a limit adjustment when the player has the passed bauble equipped. This adjustment value can be positive
      * or negative.
      *
-     * @param stack The bauble ItemStack
+     * @param stack      The bauble ItemStack
      * @param adjustment The limit adjustment when the bauble is equipped
      * @return this
      */
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
     public T addBaubleLimitAdjustment(ItemStack stack, int adjustment) {
-        if(!stack.isEmpty() && stack.getItem() instanceof IBauble) {
+        if (!stack.isEmpty() && stack.getItem() instanceof IBauble) {
             baubleLimitAdjustments.put(stack, adjustment);
         } else {
             LogHelper.error("Error adding bauble limit for " + stack.getItem().getRegistryName());
@@ -193,7 +193,7 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
         return this.getThis();
     }
 
-    public Map<Tuple<Enchantment,Integer>,Integer> getEnchantmentLimitAdjustments() {
+    public Map<Tuple<Enchantment, Integer>, Integer> getEnchantmentLimitAdjustments() {
         return this.enchantmentLimitAdjustments;
     }
 
@@ -202,7 +202,7 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
         return this.getThis();
     }
 
-    public Map<Tuple<Potion,Integer>,Integer> getPotionLimitAdjustments() {
+    public Map<Tuple<Potion, Integer>, Integer> getPotionLimitAdjustments() {
         return this.potionLimitAdjustments;
     }
 
@@ -211,12 +211,12 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
      * be added in order. The last stage added will override any values before it provided the player has the required
      * stage.
      *
-     * @param stageName The GameStage stage name
+     * @param stageName     The GameStage stage name
      * @param limitOverride The pickup limit override for this stage
      * @return this
      */
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
-    public T addStageLimitOverride(String stageName, int limitOverride) {
+    public T addStagedLimitOverride(String stageName, int limitOverride) {
         this.stageLimitOverride.put(stageName, limitOverride);
         return this.getThis();
     }
@@ -225,7 +225,7 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
      * Returns any defined GameStage group pickup limit overrides.
      */
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
-    public LinkedHashMap<String,Integer> getStageLimitOverride() {
+    public LinkedHashMap<String, Integer> getStageLimitOverride() {
         return this.stageLimitOverride;
     }
 
@@ -233,14 +233,14 @@ public abstract class AbstractLimitBuilder <T extends AbstractLimitBuilder<T,S>,
      * Specifies any ItemStacks that will be removed from this group once the player obtains the specified GameStage.
      *
      * @param stageName The name of the GameStage
-     * @param stacks Any stacks that will be removed from this group limit when the player obtains the specified GameStage
+     * @param stacks    Any stacks that will be removed from this group limit when the player obtains the specified GameStage
      * @return this
      */
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
     public T addStagedStackGroupRemoval(String stageName, ItemStack... stacks) {
         NonNullList<ItemStack> stackList = NonNullList.from(ItemStack.EMPTY, stacks);
         stackList.removeIf(ItemStack::isEmpty);
-        if(this.stagedStackRemovals.containsKey(stageName)) {
+        if (this.stagedStackRemovals.containsKey(stageName)) {
             this.stagedStackRemovals.get(stageName).addAll(stackList);
         } else {
             this.stagedStackRemovals.put(stageName, stackList);

@@ -24,7 +24,7 @@ public class PickupLimitGroup extends AbstractLimitGroup<PickupLimitBuilder> {
     @Override
     public boolean matches(EntityPlayer player, ItemStack stack) {
         //Values of -1 means the limit is not active.
-        if(!stack.isEmpty() && this.getLimitWithStageOverride(player) != -1) {
+        if (!stack.isEmpty() && this.getLimitWithStageOverride(player) != -1) {
             for (ItemStack limitStack : this.getLimitStacks(player)) {
                 if (OreDictionary.itemMatches(limitStack, stack, false)) {
                     if (!limitStack.hasTagCompound() || ItemStack.areItemStackTagsEqual(stack, limitStack)) {
@@ -42,7 +42,7 @@ public class PickupLimitGroup extends AbstractLimitGroup<PickupLimitBuilder> {
         if (!this.encumberedEffects.isEmpty()) {
             final int duration = ConfigHandlerPL.pickup_limits.inventoryCheckInterval + 20;
             this.encumberedEffects.forEach((potion, amplifier) -> player.addPotionEffect(new PotionEffect(potion, duration, amplifier, true, false)));
-        } else if(dropItem) {
+        } else if (dropItem) {
             player.dropItem(stack, true);
             groupCache.shrinkInvCount(stack);
             return true;

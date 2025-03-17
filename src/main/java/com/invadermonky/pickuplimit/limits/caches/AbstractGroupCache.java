@@ -60,7 +60,7 @@ public abstract class AbstractGroupCache<T extends AbstractLimitGroup<?>> implem
     }
 
     public int getStackLimitValue(ItemStack stack) {
-        if(this.group.getStackLimitFunction() != null) {
+        if (this.group.getStackLimitFunction() != null) {
             return this.group.getStackLimitFunction().process(this.player, stack, this);
         }
         return this.getDefaultLimitValue(stack);

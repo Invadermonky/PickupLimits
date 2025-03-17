@@ -69,13 +69,13 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
     @MethodDescription(
             type = MethodDescription.Type.ADDITION,
             example = {
-                    @Example("'protection', 8, 'your.translation.key', enchantment('minecraft:protection')"),
-                    @Example("'protection', 8, 'You can only equip up to level VIII Protection', enchantment('minecraft:protection')")
+                    @Example(value = "'protection', 8, 'your.translation.key', enchantment('minecraft:protection')"),
+                    @Example(value = "'protection', 8, 'You can only equip up to 8 levels of Protection', enchantment('minecraft:protection')")
             },
             priority = 1001
     )
     public void simpleEnchantmentLimit(String groupName, int defaultLimit, @Nullable String message, Enchantment... enchants) {
-        this.recipeBuilder(groupName,defaultLimit)
+        this.recipeBuilder(groupName, defaultLimit)
                 .setLimitMessage(message)
                 .addEnchantments(enchants)
                 .setCheckOffhand()
@@ -107,7 +107,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
                 .setMatchAnyEnchant()
                 .setIgnoreItemEnchantmentCount()
                 .setCheckOffhand();
-        if(checkMainhand)
+        if (checkMainhand)
             builder.setCheckMainhand();
 
         builder.register();
@@ -187,7 +187,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
         @RecipeBuilderRegistrationMethod
         public @Nullable EquipmentLimitGroup register() {
             GroovyLog.get().info(String.format("Registering Equipment Limit group: '%s'", this.getBuilder().getGroupName()));
-            if(!validate()) return null;
+            if (!validate()) return null;
             EquipmentLimitGroup group = this.getBuilder().build();
             LimitRegistry.addEquipmentLimitGroup(group);
             return group;

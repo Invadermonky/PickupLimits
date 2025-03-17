@@ -16,7 +16,7 @@ public class LimitRegistry {
     private static final THashMap<String, PickupLimitGroup> pickupLimitGroups = new THashMap<>();
 
     public static void addEquipmentLimitGroup(EquipmentLimitGroup pickupLimitGroup) {
-        if(pickupLimitGroup != null) {
+        if (pickupLimitGroup != null) {
             equipmentLimitGroups.put(pickupLimitGroup.getGroupName(), pickupLimitGroup);
         } else {
             LogHelper.error("Failed to register PickupLimitGroup. Value cannot be null.");
@@ -24,7 +24,7 @@ public class LimitRegistry {
     }
 
     public static void addPickupLimitGroup(PickupLimitGroup pickupLimitGroup) {
-        if(pickupLimitGroup != null) {
+        if (pickupLimitGroup != null) {
             pickupLimitGroups.put(pickupLimitGroup.getGroupName(), pickupLimitGroup);
         } else {
             LogHelper.error("Failed to register PickupLimitGroup. Value cannot be null.");
@@ -33,8 +33,8 @@ public class LimitRegistry {
 
     public static List<EquipmentLimitGroup> getEquipmentLimitGroups(EntityPlayer player, ItemStack stack) {
         List<EquipmentLimitGroup> pickupLimitGroups = new ArrayList<>();
-        for(EquipmentLimitGroup pickupLimitGroup : equipmentLimitGroups.values()) {
-            if(pickupLimitGroup.matches(player, stack)) {
+        for (EquipmentLimitGroup pickupLimitGroup : equipmentLimitGroups.values()) {
+            if (pickupLimitGroup.matches(player, stack)) {
                 pickupLimitGroups.add(pickupLimitGroup);
             }
         }
@@ -43,8 +43,8 @@ public class LimitRegistry {
 
     public static List<PickupLimitGroup> getPickupLimitGroups(EntityPlayer player, ItemStack stack) {
         List<PickupLimitGroup> pickupLimitGroups = new ArrayList<>();
-        for(PickupLimitGroup pickupLimitGroup : LimitRegistry.pickupLimitGroups.values()) {
-            if(pickupLimitGroup.matches(player, stack)) {
+        for (PickupLimitGroup pickupLimitGroup : LimitRegistry.pickupLimitGroups.values()) {
+            if (pickupLimitGroup.matches(player, stack)) {
                 pickupLimitGroups.add(pickupLimitGroup);
             }
         }
@@ -53,6 +53,7 @@ public class LimitRegistry {
 
     /**
      * Returns all limit groups associated with this
+     *
      * @param player
      * @param stack
      * @return

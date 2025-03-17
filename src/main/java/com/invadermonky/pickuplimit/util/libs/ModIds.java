@@ -9,8 +9,7 @@ public enum ModIds {
     baubles(ConstIds.baubles),
     crafttweaker(ConstIds.craftweaker),
     gamestages(ConstIds.gamestages),
-    groovyscript(ConstIds.groovyscript)
-    ;
+    groovyscript(ConstIds.groovyscript);
 
     public final String modId;
 

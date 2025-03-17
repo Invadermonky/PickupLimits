@@ -44,7 +44,7 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
     }
 
     private void cleanLists() {
-        if(this.matchAnyEnchant) {
+        if (this.matchAnyEnchant) {
             this.groupEnchants.clear();
             this.stagedEnchantRemovals.clear();
         } else {
@@ -63,10 +63,10 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
     }
 
     public Set<Enchantment> getLimitEnchants(EntityPlayer player) {
-        if(ModIds.gamestages.isLoaded()) {
+        if (ModIds.gamestages.isLoaded()) {
             Set<Enchantment> limitEnchants = new THashSet<>(this.groupEnchants);
-            for(String stage : this.stagedEnchantRemovals.keySet()) {
-                if(GameStageHelper.hasStage(player, stage)) {
+            for (String stage : this.stagedEnchantRemovals.keySet()) {
+                if (GameStageHelper.hasStage(player, stage)) {
                     limitEnchants.removeAll(this.stagedEnchantRemovals.get(stage));
                 }
             }
@@ -79,8 +79,8 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
     @Override
     public int getStackLimitValue(EntityPlayer player, ItemStack stack) {
         int count = this.itemMatches(player, stack) ? stack.getCount() : 0;
-        if(stack.isItemEnchanted()) {
-            if(this.ignoreItemEnchantCount && this.enchantmentMatches(player, stack))
+        if (stack.isItemEnchanted()) {
+            if (this.ignoreItemEnchantCount && this.enchantmentMatches(player, stack))
                 return count + 1;
 
             count += EnchantmentHelper.getEnchantments(stack).entrySet().stream()
@@ -92,13 +92,13 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
     }
 
     private boolean enchantmentMatches(EntityPlayer player, ItemStack stack) {
-        if(!stack.isEmpty() && stack.isItemEnchanted()) {
-            if(this.matchAnyEnchant)
+        if (!stack.isEmpty() && stack.isItemEnchanted()) {
+            if (this.matchAnyEnchant)
                 return true;
 
             Set<Enchantment> limitEnchants = this.getLimitEnchants(player);
-            for(Enchantment stackEnch : EnchantmentHelper.getEnchantments(stack).keySet()) {
-                if(limitEnchants.contains(stackEnch))
+            for (Enchantment stackEnch : EnchantmentHelper.getEnchantments(stack).keySet()) {
+                if (limitEnchants.contains(stackEnch))
                     return true;
             }
         }
@@ -106,7 +106,7 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
     }
 
     private boolean itemMatches(EntityPlayer player, ItemStack stack) {
-        if(!stack.isEmpty() && this.getLimitWithStageOverride(player) != -1) {
+        if (!stack.isEmpty() && this.getLimitWithStageOverride(player) != -1) {
             for (ItemStack limitStack : this.getLimitStacks(player)) {
                 if (ItemStack.areItemsEqualIgnoreDurability(stack, limitStack)) {
                     if (!limitStack.hasTagCompound() || ItemStack.areItemStackTagsEqual(stack, limitStack)) {
@@ -125,13 +125,13 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
 
     @Override
     public boolean handleLimitDrop(EntityPlayer player, ItemStack stack, AbstractGroupCache<?> groupCache, boolean dropItem) {
-        if(!this.encumberedEffects.isEmpty()) {
+        if (!this.encumberedEffects.isEmpty()) {
             final int duration = ConfigHandlerPL.pickup_limits.inventoryCheckInterval + 20;
             this.encumberedEffects.forEach((potion, amplifier) -> player.addPotionEffect(new PotionEffect(potion, duration, amplifier, true, false)));
         } else {
             player.world.playSound(null, player.getPosition(), SoundEvents.ITEM_ARMOR_EQUIP_GENERIC, SoundCategory.PLAYERS, 1.0f, 1.0f);
             CommonEventHandler.sendLimitMessage(player, stack, groupCache, ConfigHandlerPL.pickup_limits.enableEquipmentLimitMessage);
-            if(dropItem || !player.addItemStackToInventory(stack)) {
+            if (dropItem || !player.addItemStackToInventory(stack)) {
                 player.dropItem(stack, true);
                 return true;
             }

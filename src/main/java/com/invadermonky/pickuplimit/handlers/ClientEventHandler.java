@@ -1,6 +1,7 @@
 package com.invadermonky.pickuplimit.handlers;
 
 import com.invadermonky.pickuplimit.PickupLimits;
+import com.invadermonky.pickuplimit.config.ConfigHandlerPL;
 import com.invadermonky.pickuplimit.limits.groups.AbstractLimitGroup;
 import com.invadermonky.pickuplimit.registry.LimitRegistry;
 import com.invadermonky.pickuplimit.util.StringHelper;
@@ -12,18 +13,20 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = PickupLimits.MOD_ID)
+@Mod.EventBusSubscriber(modid = PickupLimits.MOD_ID, value = Side.CLIENT)
 public class ClientEventHandler {
-    @SideOnly(Side.CLIENT)
+    //TODO: Check for no server crash.
     @SubscribeEvent
     public static void onItemTooltipEvent(ItemTooltipEvent event) {
+        if (!ConfigHandlerPL.pickup_limits.enableTooltipLimitMessage)
+            return;
+
         EntityPlayer player = event.getEntityPlayer();
         ItemStack stack = event.getItemStack();
-        if(player != null && !stack.isEmpty()) {
+        if (player != null && !stack.isEmpty()) {
             List<AbstractLimitGroup<?>> groups = LimitRegistry.getLimitGroups(event.getEntityPlayer(), event.getItemStack());
             if (groups.isEmpty())
                 return;

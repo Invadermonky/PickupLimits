@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Objects;
 
-public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
+public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?, ?>> {
     protected final String groupName;
     protected final int defaultLimit;
     protected final NonNullList<ItemStack> groupStacks;
@@ -63,7 +63,7 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
         this.potionLimitAdjustments.keySet().removeIf(Objects::isNull);
         this.stageLimitOverride.keySet().removeIf(stage -> stage == null || stage.trim().isEmpty());
         this.stagedStackRemovals.entrySet().removeIf(entry -> {
-            if(entry.getKey() == null || entry.getKey().trim().isEmpty())
+            if (entry.getKey() == null || entry.getKey().trim().isEmpty())
                 return true;
             entry.getValue().removeIf(ItemStack::isEmpty);
             return entry.getValue().isEmpty();
@@ -97,22 +97,22 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
     public int getLimit(EntityPlayer player) {
         int limit = this.getLimitWithStageOverride(player);
 
-        if(limit < 0) {
+        if (limit < 0) {
             return -1;
         }
 
-        for(ItemStack armorStack : player.getArmorInventoryList()) {
-            for(ItemStack limitArmor : this.armorLimitAdjustments.keySet()) {
+        for (ItemStack armorStack : player.getArmorInventoryList()) {
+            for (ItemStack limitArmor : this.armorLimitAdjustments.keySet()) {
                 //Handling Armor Limit Adjustments
-                if(ItemStack.areItemsEqualIgnoreDurability(armorStack, limitArmor) && (!limitArmor.hasTagCompound() || ItemStack.areItemStackTagsEqual(armorStack, limitArmor))) {
+                if (ItemStack.areItemsEqualIgnoreDurability(armorStack, limitArmor) && (!limitArmor.hasTagCompound() || ItemStack.areItemStackTagsEqual(armorStack, limitArmor))) {
                     limit += this.armorLimitAdjustments.get(limitArmor);
                 }
 
                 //Handling Enchantment Limit Adjustments
-                if(!this.enchantmentLimitAdjustments.isEmpty() && armorStack.isItemEnchanted()) {
-                    for(Tuple<Enchantment, Integer> limitPair : this.enchantmentLimitAdjustments.keySet()) {
+                if (!this.enchantmentLimitAdjustments.isEmpty() && armorStack.isItemEnchanted()) {
+                    for (Tuple<Enchantment, Integer> limitPair : this.enchantmentLimitAdjustments.keySet()) {
                         int enchLevel = EnchantmentHelper.getEnchantmentLevel(limitPair.getFirst(), armorStack);
-                        if(enchLevel != -1 && (limitPair.getSecond() == -1 || limitPair.getSecond() == enchLevel)) {
+                        if (enchLevel > 0 && (limitPair.getSecond() == -1 || limitPair.getSecond() == enchLevel)) {
                             limit += this.enchantmentLimitAdjustments.get(limitPair);
                         }
                     }
@@ -121,21 +121,21 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
         }
 
         //Handling bauble limit adjustments
-        if(ModIds.baubles.isLoaded()) {
+        if (ModIds.baubles.isLoaded()) {
             for (ItemStack bauble : this.baubleLimitAdjustments.keySet()) {
                 IBaublesItemHandler handler = BaublesApi.getBaublesHandler(player);
-                for(int i = 0; i < handler.getSlots(); i++) {
+                for (int i = 0; i < handler.getSlots(); i++) {
                     ItemStack stack = handler.getStackInSlot(i);
-                    if(ItemStack.areItemsEqual(bauble, stack) && (!bauble.hasTagCompound() || ItemStack.areItemStackTagsEqual(bauble, stack))) {
+                    if (ItemStack.areItemsEqual(bauble, stack) && (!bauble.hasTagCompound() || ItemStack.areItemStackTagsEqual(bauble, stack))) {
                         limit += this.baubleLimitAdjustments.get(bauble);
                     }
                 }
             }
         }
 
-        for(Tuple<Potion, Integer> limitPair : this.potionLimitAdjustments.keySet()) {
+        for (Tuple<Potion, Integer> limitPair : this.potionLimitAdjustments.keySet()) {
             PotionEffect effect = player.getActivePotionEffect(limitPair.getFirst());
-            if(effect != null && (limitPair.getSecond() == -1 || limitPair.getSecond() == effect.getAmplifier())) {
+            if (effect != null && (limitPair.getSecond() == -1 || limitPair.getSecond() == effect.getAmplifier())) {
                 limit += this.potionLimitAdjustments.get(limitPair);
             }
         }
@@ -145,9 +145,9 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
 
     protected int getLimitWithStageOverride(EntityPlayer player) {
         int limit = this.defaultLimit;
-        if(ModIds.gamestages.isLoaded()) {
-            for(String stage : this.stageLimitOverride.keySet()) {
-                if(GameStageHelper.hasStage(player, stage)) {
+        if (ModIds.gamestages.isLoaded()) {
+            for (String stage : this.stageLimitOverride.keySet()) {
+                if (GameStageHelper.hasStage(player, stage)) {
                     limit = this.stageLimitOverride.get(stage);
                 }
             }
@@ -156,13 +156,13 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?,?>> {
     }
 
     public NonNullList<ItemStack> getLimitStacks(EntityPlayer player) {
-        if(ModIds.gamestages.isLoaded()) {
+        if (ModIds.gamestages.isLoaded()) {
             NonNullList<ItemStack> stacks = NonNullList.create();
             this.groupStacks.stream().map(ItemStack::copy).forEach(stacks::add);
 
-            for(String stageName : this.stagedStackRemovals.keySet()) {
-                if(GameStageHelper.hasStage(player, stageName)) {
-                    for(ItemStack removeStack : this.stagedStackRemovals.get(stageName)) {
+            for (String stageName : this.stagedStackRemovals.keySet()) {
+                if (GameStageHelper.hasStage(player, stageName)) {
+                    for (ItemStack removeStack : this.stagedStackRemovals.get(stageName)) {
                         stacks.removeIf(stack -> ItemStack.areItemStacksEqual(stack, removeStack));
                     }
                 }

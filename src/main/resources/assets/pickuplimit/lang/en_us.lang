@@ -11,6 +11,9 @@ groovyscript.wiki.pickuplimits.equipment_limit.title=Equipment Limits
 groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit=Simple Equipment Limit
 groovyscript.wiki.pickuplimits.equipment_limit.simpleEnchantmentLimit=Simple Enchantment Limit
 groovyscript.wiki.pickuplimits.equipment_limit.equippedEnchantedItemLimit=Simple Enchanted Item Limit
+
 groovyscript.wiki.pickuplimits.pickup_limit.title=Pickup Limits
+groovyscript.wiki.pickuplimits.pickup_limit.description=Simple Pickup Limit methods are for creating basic limit groups. They can be defined using ItemStacks or OreDictionary values. Simple limits cannot be modified after being defined.<br><br>> [!NOTE]<br>> Simple Pickup Limits will scan a player's inventory, armor, baubles, and offhand. Any item found that exceeds the pickup limit will be removed from the player's inventory and dropped onto the ground.
 groovyscript.wiki.pickuplimits.pickup_limit.simplePickupLimit=Simple Pickup Limit
+groovyscript.wiki.pickuplimits.pickup_limit.simplePickupLimit.description=| Parameter | Type | Description |<br>|:---:|:---:|---|<br>| `groupName` | Required | The name of this pickup group. This value must be unique for all defined limit groups. Duplicates will overwrite previous entries. |<br>| `defaultLimit` | Required | The maximum limit for this group. Any items found that exceed this limit will be dropped. |<br>| `limitMessage` | *Optional* | A message that will display when items fail to pick up or are dropped. This can be a plain string or a translation key. Including a `%s` in the value will cause the ItemStack display name to be included in the message. |<br>| `stacks` | Required | Any stacks that you want added to this group. Additional ItemStacks can be added by separating them with a comma. |
 groovyscript.wiki.pickuplimits.pickup_limit.pickupLimitBuilder=Pickup Limit Builder

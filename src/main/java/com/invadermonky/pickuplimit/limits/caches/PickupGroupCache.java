@@ -19,7 +19,7 @@ public class PickupGroupCache extends AbstractGroupCache<PickupLimitGroup> {
     }
 
     public int getAdjustedPickupCount(int stackCount, int itemValue) {
-        if(stackCount != itemValue) {
+        if (stackCount != itemValue) {
             return (int) Math.floor((double) stackCount / (double) itemValue * (double) (this.getLimit() - this.getInvCount()));
         }
         return stackCount;
