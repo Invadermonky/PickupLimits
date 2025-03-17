@@ -102,8 +102,6 @@ public class PickupLimit extends VirtualizedRegistry<PickupLimitGroup> {
     //###########################################################################
 
     public static class RecipeBuilder extends AbstractLimitRecipeBuilder<RecipeBuilder, PickupLimitBuilder, PickupLimitGroup> {
-        @Property(comp = @Comp(eq = 1), priority = 999)
-        private RecipeBuilder pickupLimitBuilder;
         @Property(comp = @Comp(gte = 1), priority = 1000, value = "groovyscript.wiki.pickuplimits.limit_builder.addStacks.value")
         private List<ItemStack> addStacks;
         @Property(comp = @Comp(gte = 0), priority = 1001)

@@ -8,9 +8,13 @@ tooltip.pickuplimits:limits=Hold SHIFT to display limits
 
 # Wiki
 groovyscript.wiki.pickuplimits.equipment_limit.title=Equipment Limits
-groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit=Simple Equipment Limit
-groovyscript.wiki.pickuplimits.equipment_limit.simpleEnchantmentLimit=Simple Enchantment Limit
-groovyscript.wiki.pickuplimits.equipment_limit.equippedEnchantedItemLimit=Simple Enchanted Item Limit
+groovyscript.wiki.pickuplimits.equipment_limit.description=<p>Equipment Limits are a specialized type of Pickup Limit. Where Pickup Limits scan a player's inventory for items and calculate a total based on count, Equipment Limits focus on currently equipped items. The focus on equipped items comes with two major differences from Pickup Limits.</p><p>First, any item found that exceeds the equipment group limit will be unequipped and placed in the player's inventory instead of being dropped on the ground. The only exception to this are items held in the player's mainhand.</p><p>Second, in the place of ore dictionary entries, equipment limit groups allow you to specify limits based on enchantments. This means that limit values per item are calculated slightly differently than normal pickup limits.</p>For more information and examples, you can check out the Pickup Limits GitHub Wiki https://github.com/Invadermonky/PickupLimits/wiki.
+groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit.description=Creates a simple equipped item limit Group
+groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit.message.description=Creates a equipped item limit group with limit message
+groovyscript.wiki.pickuplimits.equipment_limit.simpleEnchantmentLimit.description=Creates a simple equipped item enchantment limit group
+groovyscript.wiki.pickuplimits.equipment_limit.simpleEnchantmentLimit.message.description=Creates a simple equipped item enchantment limit group with limit message
+groovyscript.wiki.pickuplimits.equipment_limit.equippedEnchantedItemLimit.description=Creates an equipment limit group restricting the number of enchanted items a player can equip and use at once
+groovyscript.wiki.pickuplimits.equipment_limit.equippedEnchantedItemLimit.message.description=Creates an equipment limit group restricting the number of enchanted items a player can equip and use at once with limit message
 
 groovyscript.wiki.pickuplimits.equipment_limit.addEnchantments.value=<p>You can add Enchantment values to Equipment Limit groups. Using the `setMatchAnyEnchant()` will allow the limit group to match any enchantment.</p><p>You can call the `addEnchantments()` method as many times as needed in any order.</p>
 groovyscript.wiki.pickuplimits.equipment_limit.addStagedEnchantmentRemovals.value=<p>You can define Enchantment values you wish to remove from this group based on player stage. When the player reaches the specified stage, any defined item will be removed from the limit group.</p>You can call this method as many times as needed in any order
@@ -34,12 +38,13 @@ groovyscript.wiki.pickuplimits.limit_builder.setLimitTooltip.value=<p>You can de
 groovyscript.wiki.pickuplimits.limit_builder.setStackLimitFunction.value=<p>Limit value functions allow users to have complete control over the calculated limit value of any item that matches the limit group.<p>The `ILimitFunction` is a function provider that grants access to the player (EntityPlayer), the queried ItemStack, and the limit group (ILimitGroup).</p><p>This method overwrites all other limit calculation behavior. Should you want to use default group behavior, be sure to return the ```getDefaultLimitValue``` pulled from the group parameter.</p>This method can only be called once per builder
 
 groovyscript.wiki.pickuplimits.pickup_limit.title=Pickup Limits
-groovyscript.wiki.pickuplimits.pickup_limit.description=Pickup Limits are limit groups that restrict the number of items a player is allowed to carry. PickupLimits scan the player's inventory and calculate a total based on number of items that match each limit group. Should the player exceed the maximum allowable limit, excess items will be dropped into the world.
+groovyscript.wiki.pickuplimits.pickup_limit.description=Pickup Limits are limit groups that restrict the number of items a player is allowed to carry. PickupLimits scan the player's inventory and calculate a total based on number of items that match each limit group. Should the player exceed the maximum allowable limit, excess items will be dropped into the world. For more information and examples, you can check out the Pickup Limits GitHub Wiki https://github.com/Invadermonky/PickupLimits/wiki.
 groovyscript.wiki.pickuplimits.pickup_limit.simplePickupLimit=Simple Pickup Limit
-groovyscript.wiki.pickuplimits.pickup_limit.simpleItemPickupLimit.description=Simple ItemStack Pickup Limit Group
-groovyscript.wiki.pickuplimits.pickup_limit.simpleItemPickupLimit.message.description=Simple ItemStack Pickup Limit Group with Limit Message
-groovyscript.wiki.pickuplimits.pickup_limit.simpleOrePickupLimit.description=Simple Ore Dictionary Limit Group
-groovyscript.wiki.pickuplimits.pickup_limit.simpleOrePickupLimit.message.description=Simple Ore Dictionary Limit Group with Limit Message
+groovyscript.wiki.pickuplimits.pickup_limit.simpleItemPickupLimit.description=Creates a simple ItemStack inventory carry limit group
+groovyscript.wiki.pickuplimits.pickup_limit.simpleItemPickupLimit.message.description=Creates a simple ItemStack inventory carry limit group with limit message
+groovyscript.wiki.pickuplimits.pickup_limit.simpleOrePickupLimit.description=Creates a simple Ore Dictionary inventory carry limit group
+groovyscript.wiki.pickuplimits.pickup_limit.simpleOrePickupLimit.message.description=Creates a simple Ore Dictionary inventory carry limit group with limit message
+
 groovyscript.wiki.pickuplimits.pickup_limit.addOreDict.value=<p>In addition to ItemStacks, Pickup Limits support adding items via [OreDictIngredient](https://cleanroommc.com/groovy-script/minecraft/vanilla_object_mappers#ore). Any ItemStack matching the passed ore dictionary will be registered with the limit group.</p>You can call this method as many times as needed in any order
 groovyscript.wiki.pickuplimits.pickup_limit.addStagedOreRemovals.value=<p>You can define any [OreDictIngredient](https://cleanroommc.com/groovy-script/minecraft/vanilla_object_mappers#ore) value you wish to remove from this group based on player stage. When the player reaches the specified stage, any defined item will be removed from the limit group.</p>You can call this method as many times as needed in any order
 
