@@ -3,10 +3,8 @@ package com.invadermonky.pickuplimit.limits.builders;
 import com.invadermonky.pickuplimit.limits.groups.PickupLimitGroup;
 import com.invadermonky.pickuplimit.util.StringHelper;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraftforge.fml.common.Optional;
-import net.minecraftforge.oredict.OreDictionary;
 
 public class PickupLimitBuilder extends AbstractLimitBuilder<PickupLimitBuilder, PickupLimitGroup> {
 
@@ -20,34 +18,21 @@ public class PickupLimitBuilder extends AbstractLimitBuilder<PickupLimitBuilder,
         return this;
     }
 
+    @Override
+    public PickupLimitGroup build() {
+        return new PickupLimitGroup(this);
+    }
+
     /**
      * Any ItemStacks associated with the passed ore dictionary string will be removed from this group once the player
      * obtains the specified GameStage.
      *
-     * @param stageName The name of the GameStage
-     * @param oreDict   The ore dictionary string
+     * @param stageName  The name of the GameStage
+     * @param ingredient The ingredient value
      * @return this
      */
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
-    public PickupLimitBuilder addStagedOreGroupRemoval(String stageName, String oreDict) {
-        NonNullList<ItemStack> stackList = NonNullList.create();
-        stackList.addAll(OreDictionary.getOres(oreDict));
-        return this.addStagedStackGroupRemoval(stageName, stackList.toArray(new ItemStack[0]));
-    }
-
-    /**
-     * Adds all ItemStacks associated with the passed ore dictionary string to the group ItemStack list.
-     *
-     * @param oreDict The ore dictionary string
-     * @return this
-     */
-    public PickupLimitBuilder addOreDictToGroup(String oreDict) {
-        this.groupStacks.addAll(OreDictionary.getOres(oreDict));
-        return this;
-    }
-
-    @Override
-    public PickupLimitGroup build() {
-        return new PickupLimitGroup(this);
+    public PickupLimitBuilder addStagedGroupRemoval(String stageName, Ingredient ingredient) {
+        return this.addStagedIngredientRemoval(stageName, ingredient);
     }
 }

@@ -2,8 +2,7 @@ package com.invadermonky.pickuplimit.compat.crafttweaker.limits;
 
 import com.invadermonky.pickuplimit.util.libs.LibZenClasses;
 import crafttweaker.annotations.ZenRegister;
-import crafttweaker.api.item.IItemStack;
-import crafttweaker.api.oredict.IOreDictEntry;
+import crafttweaker.api.item.IIngredient;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
 
@@ -11,37 +10,18 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass(LibZenClasses.PickupLimit)
 public class PickupLimitCT {
     @ZenMethod
-    public static void simplePickupLimit(String groupName, int defaultLimit, IItemStack... groupStacks) {
+    public static void simplePickupLimit(String groupName, int defaultLimit, IIngredient... items) {
         new PickupLimitBuilderCT(groupName, defaultLimit)
-                .addStacks(groupStacks)
+                .addItems(items)
                 .build();
     }
 
     @ZenMethod
-    public static void simplePickupLimit(String groupName, int defaultLimit, String message, IItemStack... groupStacks) {
+    public static void simplePickupLimit(String groupName, int defaultLimit, String message, IIngredient... items) {
         new PickupLimitBuilderCT(groupName, defaultLimit)
-                .addStacks(groupStacks)
+                .addItems(items)
                 .setLimitMessage(message)
                 .build();
-    }
-
-    @ZenMethod
-    public static void simplePickupLimit(String groupName, int defaultLimit, IOreDictEntry... iOreDictEntries) {
-        PickupLimitBuilderCT primer = new PickupLimitBuilderCT(groupName, defaultLimit);
-        for (IOreDictEntry oreDictEntry : iOreDictEntries) {
-            primer.addOreDict(oreDictEntry);
-        }
-        primer.build();
-    }
-
-    @ZenMethod
-    public static void simplePickupLimit(String groupName, int defaultLimit, String message, IOreDictEntry... iOreDictEntries) {
-        PickupLimitBuilderCT primer = new PickupLimitBuilderCT(groupName, defaultLimit);
-        for (IOreDictEntry oreDictEntry : iOreDictEntries) {
-            primer.addOreDict(oreDictEntry);
-        }
-        primer.setLimitMessage(message);
-        primer.build();
     }
 
     @ZenMethod

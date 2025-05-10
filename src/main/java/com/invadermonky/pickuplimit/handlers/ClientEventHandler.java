@@ -39,12 +39,12 @@ public class ClientEventHandler {
                 event.getToolTip().add(I18n.format(StringHelper.getTranslationKey("limits", "tooltip")));
             } else {
                 groups.forEach(group -> {
-                            String tooltip = I18n.format(group.getLimitTooltip(), group.getLimit(player));
-                            if (tooltip.matches("Format error: .*")) {
-                                tooltip = I18n.format(group.getLimitTooltip());
-                            }
-                            event.getToolTip().add(tooltip);
-                        });
+                    String tooltip = I18n.format(group.getLimitTooltip(), group.getLimit(player));
+                    if (tooltip.matches("Format error: .*")) {
+                        tooltip = I18n.format(group.getLimitTooltip());
+                    }
+                    event.getToolTip().add(tooltip);
+                });
             }
         }
     }

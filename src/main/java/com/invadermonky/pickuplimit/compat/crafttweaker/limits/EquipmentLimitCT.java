@@ -4,7 +4,7 @@ import com.invadermonky.pickuplimit.PickupLimits;
 import com.invadermonky.pickuplimit.util.libs.LibZenClasses;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.enchantments.IEnchantmentDefinition;
-import crafttweaker.api.item.IItemStack;
+import crafttweaker.api.item.IIngredient;
 import stanhebben.zenscript.annotations.Optional;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
@@ -13,16 +13,16 @@ import stanhebben.zenscript.annotations.ZenMethod;
 @ZenClass(LibZenClasses.EquipmentLimit)
 public class EquipmentLimitCT {
     @ZenMethod
-    public static void simpleEquipmentLimit(String groupName, int defaultLimit, IItemStack... groupStacks) {
+    public static void simpleEquipmentLimit(String groupName, int defaultLimit, IIngredient... items) {
         new EquipmentLimitBuilderCT(groupName, defaultLimit)
-                .addStacks(groupStacks)
+                .addItems(items)
                 .build();
     }
 
     @ZenMethod
-    public static void simpleEquipmentLimit(String groupName, int defaultLimit, String message, IItemStack... groupStacks) {
+    public static void simpleEquipmentLimit(String groupName, int defaultLimit, String message, IIngredient... items) {
         new EquipmentLimitBuilderCT(groupName, defaultLimit)
-                .addStacks(groupStacks)
+                .addItems(items)
                 .setLimitMessage(message)
                 .build();
     }

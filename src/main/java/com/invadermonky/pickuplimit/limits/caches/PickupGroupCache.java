@@ -18,10 +18,11 @@ public class PickupGroupCache extends AbstractGroupCache<PickupLimitGroup> {
         return this.group.handleLimitDrop(this.player, stack, this, dropItem && this.shouldItemBeDropped());
     }
 
+    /**
+     * Returns the number of items that can be picked up by the player taking into account the group limit and the current
+     * inventory item count.
+     */
     public int getAdjustedPickupCount(int stackCount, int itemValue) {
-        if (stackCount != itemValue) {
-            return (int) Math.floor((double) stackCount / (double) itemValue * (double) (this.getLimit() - this.getInvCount()));
-        }
-        return stackCount;
+        return (int) (((this.getLimit() - this.getInvCount())) / ((double) stackCount / (double) itemValue));
     }
 }

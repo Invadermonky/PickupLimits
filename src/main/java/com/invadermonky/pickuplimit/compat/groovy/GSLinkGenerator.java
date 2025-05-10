@@ -10,13 +10,13 @@ public class GSLinkGenerator extends BasicLinkGenerator {
     }
 
     @Override
-    protected String version() {
-        return PickupLimits.VERSION;
+    protected String domain() {
+        return "https://github.com/Invadermonky/PickupLimit/";
     }
 
     @Override
-    protected String domain() {
-        return "https://github.com/Invadermonky/PickupLimit/";
+    protected String version() {
+        return PickupLimits.VERSION;
     }
 
 }

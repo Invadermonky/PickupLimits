@@ -5,15 +5,19 @@ import com.invadermonky.pickuplimit.util.libs.LibZenClasses;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import crafttweaker.annotations.ZenRegister;
 import crafttweaker.api.enchantments.IEnchantmentDefinition;
+import crafttweaker.api.item.IIngredient;
 import crafttweaker.api.item.IItemStack;
 import crafttweaker.api.minecraft.CraftTweakerMC;
 import crafttweaker.api.potions.IPotion;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Optional;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import stanhebben.zenscript.annotations.ZenClass;
 import stanhebben.zenscript.annotations.ZenMethod;
+
+import java.util.Arrays;
 
 //I know it's not an interface, but labeling it as ILimitBuilder is a good indication that it doesn't do anything on its own.
 @ZenClass(LibZenClasses.ILimitBuilder)
@@ -32,8 +36,9 @@ public abstract class ILimitBuilderCT<T extends ILimitBuilderCT<T, S>, S extends
     }
 
     @ZenMethod
-    public T addStacks(IItemStack... stacks) {
-        this.getBuilder().addStacksToGroup(CraftTweakerMC.getItemStacks(stacks));
+    public T addItems(IIngredient... iIngredients) {
+        Arrays.stream(iIngredients).forEach(iIngredient ->
+                this.getBuilder().addItemsToGroup(CraftTweakerMC.getIngredient(iIngredient)));
         return this.getThis();
     }
 
@@ -141,8 +146,8 @@ public abstract class ILimitBuilderCT<T extends ILimitBuilderCT<T, S>, S extends
 
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
     @ZenMethod
-    public T addStagedStackRemovals(String stageName, IItemStack... stacks) {
-        this.getBuilder().addStagedStackGroupRemoval(stageName, CraftTweakerMC.getItemStacks(stacks));
+    public T addStagedItemRemovals(String stageName, IIngredient... iIngredients) {
+        this.getBuilder().addStagedIngredientRemoval(stageName, Arrays.stream(iIngredients).map(CraftTweakerMC::getIngredient).toArray(Ingredient[]::new));
         return this.getThis();
     }
 

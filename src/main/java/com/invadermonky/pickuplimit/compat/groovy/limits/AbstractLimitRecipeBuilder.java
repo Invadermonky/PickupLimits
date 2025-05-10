@@ -1,6 +1,7 @@
 package com.invadermonky.pickuplimit.compat.groovy.limits;
 
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
+import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RecipeBuilderMethodDescription;
 import com.cleanroommc.groovyscript.api.documentation.annotations.RegistryDescription;
 import com.cleanroommc.groovyscript.helper.recipe.AbstractRecipeBuilder;
@@ -11,9 +12,12 @@ import com.invadermonky.pickuplimit.limits.groups.AbstractLimitGroup;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.fml.common.Optional;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
 
 @RegistryDescription(linkGenerator = PickupLimits.MOD_ID)
 public abstract class AbstractLimitRecipeBuilder<
@@ -37,8 +41,8 @@ public abstract class AbstractLimitRecipeBuilder<
     }
 
     @RecipeBuilderMethodDescription
-    public T addStacks(ItemStack... stacks) {
-        this.getBuilder().addStacksToGroup(stacks);
+    public T addItems(IIngredient... iIngredients) {
+        this.getBuilder().addItemsToGroup(Arrays.stream(iIngredients).map(IIngredient::toMcIngredient).toArray(Ingredient[]::new));
         return this.getThis();
     }
 
@@ -106,8 +110,8 @@ public abstract class AbstractLimitRecipeBuilder<
 
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
     @RecipeBuilderMethodDescription
-    public T addStagedStackRemovals(String stageName, ItemStack... stacks) {
-        this.getBuilder().addStagedStackGroupRemoval(stageName, stacks);
+    public T addStagedStackRemovals(String stageName, IIngredient... iIngredients) {
+        this.getBuilder().addStagedIngredientRemoval(stageName, Arrays.stream(iIngredients).map(IIngredient::toMcIngredient).toArray(Ingredient[]::new));
         return this.getThis();
     }
 

@@ -5,13 +5,14 @@ import baubles.api.cap.IBaublesItemHandler;
 import com.invadermonky.pickuplimit.limits.api.ILimitFunction;
 import com.invadermonky.pickuplimit.limits.builders.AbstractLimitBuilder;
 import com.invadermonky.pickuplimit.limits.caches.AbstractGroupCache;
+import com.invadermonky.pickuplimit.util.IngredientHelper;
 import com.invadermonky.pickuplimit.util.libs.ModIds;
-import gnu.trove.map.hash.THashMap;
 import net.darkhax.gamestages.GameStageHelper;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
@@ -24,7 +25,7 @@ import java.util.Objects;
 public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?, ?>> {
     protected final String groupName;
     protected final int defaultLimit;
-    protected final NonNullList<ItemStack> groupStacks;
+    protected final NonNullList<Ingredient> groupIngredients;
     protected final ILimitFunction stackLimitFunction;
     protected final String limitMessage;
     protected final String limitTooltip;
@@ -34,13 +35,13 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?, ?>> {
     protected final Map<Tuple<Enchantment, Integer>, Integer> enchantmentLimitAdjustments;
     protected final Map<Tuple<Potion, Integer>, Integer> potionLimitAdjustments;
     protected final Map<String, Integer> stageLimitOverride;
-    protected final THashMap<String, NonNullList<ItemStack>> stagedStackRemovals;
-    protected final THashMap<Potion, Integer> encumberedEffects;
+    protected final Map<String, NonNullList<Ingredient>> stagedIngredientRemovals;
+    protected final Map<Potion, Integer> encumberedEffects;
 
     public AbstractLimitGroup(T builder) {
         this.groupName = builder.getGroupName();
         this.defaultLimit = builder.getDefaultLimit();
-        this.groupStacks = builder.getGroupStacks();
+        this.groupIngredients = builder.getGroupItems();
         this.stackLimitFunction = builder.getItemLimitFunction();
         this.limitMessage = builder.getLimitMessage();
         this.limitTooltip = builder.getLimitTooltip();
@@ -50,22 +51,22 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?, ?>> {
         this.enchantmentLimitAdjustments = builder.getEnchantmentLimitAdjustments();
         this.potionLimitAdjustments = builder.getPotionLimitAdjustments();
         this.stageLimitOverride = builder.getStageLimitOverride();
-        this.stagedStackRemovals = builder.getStagedStackRemovals();
+        this.stagedIngredientRemovals = builder.getStagedStackRemovals();
         this.encumberedEffects = builder.getEncumberedEffects();
         this.cleanLists();
     }
 
     private void cleanLists() {
-        this.groupStacks.removeIf(ItemStack::isEmpty);
+        this.groupIngredients.removeIf(IngredientHelper::isEmpty);
         this.armorLimitAdjustments.keySet().removeIf(ItemStack::isEmpty);
         this.baubleLimitAdjustments.keySet().removeIf(ItemStack::isEmpty);
         this.enchantmentLimitAdjustments.keySet().removeIf(Objects::isNull);
         this.potionLimitAdjustments.keySet().removeIf(Objects::isNull);
         this.stageLimitOverride.keySet().removeIf(stage -> stage == null || stage.trim().isEmpty());
-        this.stagedStackRemovals.entrySet().removeIf(entry -> {
+        this.stagedIngredientRemovals.entrySet().removeIf(entry -> {
             if (entry.getKey() == null || entry.getKey().trim().isEmpty())
                 return true;
-            entry.getValue().removeIf(ItemStack::isEmpty);
+            entry.getValue().removeIf(IngredientHelper::isEmpty);
             return entry.getValue().isEmpty();
         });
         this.encumberedEffects.keySet().removeIf(Objects::isNull);
@@ -155,21 +156,21 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?, ?>> {
         return limit;
     }
 
-    public NonNullList<ItemStack> getLimitStacks(EntityPlayer player) {
+    public NonNullList<Ingredient> getLimitIngredients(EntityPlayer player) {
         if (ModIds.gamestages.isLoaded()) {
-            NonNullList<ItemStack> stacks = NonNullList.create();
-            this.groupStacks.stream().map(ItemStack::copy).forEach(stacks::add);
+            NonNullList<Ingredient> ingredients = NonNullList.create();
+            ingredients.addAll(this.groupIngredients);
 
-            for (String stageName : this.stagedStackRemovals.keySet()) {
+            for (String stageName : this.stagedIngredientRemovals.keySet()) {
                 if (GameStageHelper.hasStage(player, stageName)) {
-                    for (ItemStack removeStack : this.stagedStackRemovals.get(stageName)) {
-                        stacks.removeIf(stack -> ItemStack.areItemStacksEqual(stack, removeStack));
+                    for (Ingredient removeIngredient : this.stagedIngredientRemovals.get(stageName)) {
+                        ingredients.removeIf(ingredient -> IngredientHelper.areIngredientsEqual(ingredient, removeIngredient));
                     }
                 }
             }
-            return stacks;
+            return ingredients;
         } else {
-            return this.groupStacks;
+            return this.groupIngredients;
 
         }
     }
@@ -186,14 +187,15 @@ public abstract class AbstractLimitGroup<T extends AbstractLimitBuilder<?, ?>> {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (!(o instanceof AbstractLimitGroup)) return false;
-        AbstractLimitGroup<?> that = (AbstractLimitGroup<?>) o;
-        return Objects.equals(getGroupName(), that.getGroupName());
+    public int hashCode() {
+        return Objects.hashCode(getGroupName());
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hashCode(getGroupName());
+    public boolean equals(Object o) {
+        if (!(o instanceof AbstractLimitGroup))
+            return false;
+        AbstractLimitGroup<?> that = (AbstractLimitGroup<?>) o;
+        return Objects.equals(getGroupName(), that.getGroupName());
     }
 }

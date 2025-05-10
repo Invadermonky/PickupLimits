@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundCategory;
 
@@ -91,33 +92,6 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
         return count;
     }
 
-    private boolean enchantmentMatches(EntityPlayer player, ItemStack stack) {
-        if (!stack.isEmpty() && stack.isItemEnchanted()) {
-            if (this.matchAnyEnchant)
-                return true;
-
-            Set<Enchantment> limitEnchants = this.getLimitEnchants(player);
-            for (Enchantment stackEnch : EnchantmentHelper.getEnchantments(stack).keySet()) {
-                if (limitEnchants.contains(stackEnch))
-                    return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean itemMatches(EntityPlayer player, ItemStack stack) {
-        if (!stack.isEmpty() && this.getLimitWithStageOverride(player) != -1) {
-            for (ItemStack limitStack : this.getLimitStacks(player)) {
-                if (ItemStack.areItemsEqualIgnoreDurability(stack, limitStack)) {
-                    if (!limitStack.hasTagCompound() || ItemStack.areItemStackTagsEqual(stack, limitStack)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     @Override
     public boolean matches(EntityPlayer player, ItemStack stack) {
         return this.enchantmentMatches(player, stack) || this.itemMatches(player, stack);
@@ -136,6 +110,31 @@ public class EquipmentLimitGroup extends AbstractLimitGroup<EquipmentLimitBuilde
                 return true;
             }
             groupCache.shrinkInvCount(stack);
+        }
+        return false;
+    }
+
+    private boolean enchantmentMatches(EntityPlayer player, ItemStack stack) {
+        if (!stack.isEmpty() && stack.isItemEnchanted()) {
+            if (this.matchAnyEnchant)
+                return true;
+
+            Set<Enchantment> limitEnchants = this.getLimitEnchants(player);
+            for (Enchantment stackEnch : EnchantmentHelper.getEnchantments(stack).keySet()) {
+                if (limitEnchants.contains(stackEnch))
+                    return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean itemMatches(EntityPlayer player, ItemStack stack) {
+        if (!stack.isEmpty() && this.getLimitWithStageOverride(player) != -1) {
+            for (Ingredient limitIngredient : this.getLimitIngredients(player)) {
+                if (limitIngredient.apply(stack)) {
+                    return true;
+                }
+            }
         }
         return false;
     }

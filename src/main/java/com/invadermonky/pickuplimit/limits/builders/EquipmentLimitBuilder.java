@@ -11,13 +11,13 @@ import net.minecraftforge.fml.common.Optional;
 import java.util.*;
 
 public class EquipmentLimitBuilder extends AbstractLimitBuilder<EquipmentLimitBuilder, EquipmentLimitGroup> {
+    protected final Set<Enchantment> groupEnchants = new THashSet<>();
+    protected final Map<String, Set<Enchantment>> stagedEnchantRemovals = new THashMap<>();
     protected boolean matchAnyEnchant;
     protected boolean ignoreItemEnchantmentCount;
     protected boolean ignoreEnchantmentLevel;
     protected boolean checkMainhand;
     protected boolean checkOffhand;
-    protected final Set<Enchantment> groupEnchants = new THashSet<>();
-    protected final Map<String, Set<Enchantment>> stagedEnchantRemovals = new THashMap<>();
 
     public EquipmentLimitBuilder(String groupName, int defaultLimit) {
         super(groupName, defaultLimit);
@@ -27,6 +27,11 @@ public class EquipmentLimitBuilder extends AbstractLimitBuilder<EquipmentLimitBu
     @Override
     protected EquipmentLimitBuilder getThis() {
         return this;
+    }
+
+    @Override
+    public EquipmentLimitGroup build() {
+        return new EquipmentLimitGroup(this);
     }
 
     public EquipmentLimitBuilder addEnchantsToGroup(Enchantment... enchantments) {
@@ -98,10 +103,5 @@ public class EquipmentLimitBuilder extends AbstractLimitBuilder<EquipmentLimitBu
     @Optional.Method(modid = ModIds.ConstIds.gamestages)
     public Map<String, Set<Enchantment>> getStagedEnchantRemovals() {
         return this.stagedEnchantRemovals;
-    }
-
-    @Override
-    public EquipmentLimitGroup build() {
-        return new EquipmentLimitGroup(this);
     }
 }

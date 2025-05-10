@@ -2,6 +2,7 @@ package com.invadermonky.pickuplimit.compat.groovy.limits;
 
 import com.cleanroommc.groovyscript.api.GroovyBlacklist;
 import com.cleanroommc.groovyscript.api.GroovyLog;
+import com.cleanroommc.groovyscript.api.IIngredient;
 import com.cleanroommc.groovyscript.api.documentation.annotations.*;
 import com.cleanroommc.groovyscript.helper.ingredient.OreDictIngredient;
 import com.cleanroommc.groovyscript.registry.VirtualizedRegistry;
@@ -40,11 +41,10 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
             example = {
                     @Example("'diamond_armor', 2, item('minecraft:diamond_helmet'), item('minecraft:diamond_chestplate'), item('minecraft:diamond_leggings'), item('minecraft:diamond_boots')")
             },
-            description = "groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit.description",
-            priority = 1000
+            description = "groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit.description"
     )
-    public void simpleEquipmentLimit(String groupName, int defaultLimit, ItemStack... stacks) {
-        this.simpleEquipmentLimit(groupName, defaultLimit, null, stacks);
+    public void simpleEquipmentLimit(String groupName, int defaultLimit, IIngredient... items) {
+        this.simpleEquipmentLimit(groupName, defaultLimit, null, items);
     }
 
     @MethodDescription(
@@ -53,13 +53,12 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
                     @Example("'diamond_armor', 2, 'your.translation.key', item('minecraft:diamond_helmet'), item('minecraft:diamond_chestplate'), item('minecraft:diamond_leggings'), item('minecraft:diamond_boots')"),
                     @Example("'diamond_armor', 2, 'You can only equip two pieces of diamond armor', item('minecraft:diamond_helmet'), item('minecraft:diamond_chestplate'), item('minecraft:diamond_leggings'), item('minecraft:diamond_boots')")
             },
-            description = "groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit.message.description",
-            priority = 1000
+            description = "groovyscript.wiki.pickuplimits.equipment_limit.simpleEquipmentLimit.message.description"
     )
-    public void simpleEquipmentLimit(String groupName, int defaultLimit, @Nullable String message, ItemStack... stacks) {
+    public void simpleEquipmentLimit(String groupName, int defaultLimit, @Nullable String message, IIngredient... items) {
         this.recipeBuilder(groupName, defaultLimit)
                 .setLimitMessage(message)
-                .addStacks(stacks)
+                .addItems(items)
                 .register();
     }
 
@@ -157,7 +156,7 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
         private List<Potion> addEncumberedEffect;
         @Property(comp = @Comp(gte = 0, eq = 1), priority = 1009, value = "groovyscript.wiki.pickuplimits.limit_builder.setLimitMessage.value")
         private String setLimitMessage;
-        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1010,  value = "groovyscript.wiki.pickuplimits.limit_builder.setLimitTooltip.value")
+        @Property(comp = @Comp(gte = 0, eq = 1), priority = 1010, value = "groovyscript.wiki.pickuplimits.limit_builder.setLimitTooltip.value")
         private String setLimitTooltip;
         @Property(comp = @Comp(gte = 0), priority = 10011, value = "groovyscript.wiki.pickuplimits.limit_builder.addArmorLimitAdjustment.value")
         private Map<ItemStack, Integer> addArmorLimitAdjustment;
@@ -231,14 +230,15 @@ public class EquipmentLimit extends VirtualizedRegistry<EquipmentLimitGroup> {
         @Override
         public void validate(GroovyLog.Msg msg) {
             msg.add(LimitRegistry.getAllEquipmentLimitGroups().containsKey(this.getBuilder().getGroupName()), "Duplicate group name found for pickup limit group " + this.getBuilder().getGroupName());
-            msg.add(this.getBuilder().getGroupStacks().isEmpty() && this.getBuilder().getGroupEnchants().isEmpty(), "Pickup limit group is empty. No items or valid oreDicts are registered");
+            msg.add(this.getBuilder().getGroupItems().isEmpty() && this.getBuilder().getGroupEnchants().isEmpty(), "Pickup limit group is empty. No items or valid oreDicts are registered");
         }
 
         @Override
         @RecipeBuilderRegistrationMethod
         public @Nullable EquipmentLimitGroup register() {
             GroovyLog.get().info(String.format("Registering Equipment Limit group: '%s'", this.getBuilder().getGroupName()));
-            if (!validate()) return null;
+            if (!validate())
+                return null;
             EquipmentLimitGroup group = this.getBuilder().build();
             LimitRegistry.addEquipmentLimitGroup(group);
             return group;

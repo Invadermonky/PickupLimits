@@ -44,7 +44,8 @@ public class CommonEventHandler {
     }
 
     public static void sendLimitMessage(EntityPlayer player, ItemStack stack, @Nonnull AbstractGroupCache<?> groupCache, boolean shouldSend) {
-        if (!shouldSend) return;
+        if (!shouldSend)
+            return;
 
         String limitMessage = groupCache.getLimitMessage();
         ITextComponent text = new TextComponentTranslation(limitMessage, stack.getDisplayName());

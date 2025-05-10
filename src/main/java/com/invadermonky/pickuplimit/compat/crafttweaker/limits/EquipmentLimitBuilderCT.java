@@ -28,6 +28,19 @@ public class EquipmentLimitBuilderCT extends ILimitBuilderCT<EquipmentLimitBuild
     }
 
     @ZenMethod
+    @Override
+    public void register() {
+        CraftTweakerAPI.logInfo(String.format("Registering Equipment Limit group '%s'", this.getBuilder().getGroupName()));
+        if (LimitRegistry.getAllEquipmentLimitGroups().containsKey(this.getBuilder().getGroupName())) {
+            CraftTweakerAPI.logWarning("Duplicate group name found. Previous limit group will be overwritten.");
+        }
+        if (this.getBuilder().getGroupItems().isEmpty() && this.getBuilder().getGroupEnchants().isEmpty()) {
+            CraftTweakerAPI.logWarning("Equipment Limit group is empty. No items or enchantments are registered.");
+        }
+        LimitRegistry.addEquipmentLimitGroup(this.getBuilder().build());
+    }
+
+    @ZenMethod
     public EquipmentLimitBuilderCT addEnchantments(IEnchantmentDefinition... iEnchantments) {
         Enchantment[] enchants = new Enchantment[iEnchantments.length];
         for (int i = 0; i < enchants.length; i++) {
@@ -76,18 +89,5 @@ public class EquipmentLimitBuilderCT extends ILimitBuilderCT<EquipmentLimitBuild
         }
         this.getBuilder().addStagedEnchantmentRemoval(stageName, enchants);
         return this;
-    }
-
-    @ZenMethod
-    @Override
-    public void register() {
-        CraftTweakerAPI.logInfo(String.format("Registering Equipment Limit group '%s'", this.getBuilder().getGroupName()));
-        if (LimitRegistry.getAllEquipmentLimitGroups().containsKey(this.getBuilder().getGroupName())) {
-            CraftTweakerAPI.logWarning("Duplicate group name found. Previous limit group will be overwritten.");
-        }
-        if (this.getBuilder().getGroupStacks().isEmpty() && this.getBuilder().getGroupEnchants().isEmpty()) {
-            CraftTweakerAPI.logWarning("Equipment Limit group is empty. No items or enchantments are registered.");
-        }
-        LimitRegistry.addEquipmentLimitGroup(this.getBuilder().build());
     }
 }
