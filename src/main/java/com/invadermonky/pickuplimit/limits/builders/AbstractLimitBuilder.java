@@ -171,7 +171,7 @@ public abstract class AbstractLimitBuilder<T extends AbstractLimitBuilder<T, S>,
      * @param adjustment The limit adjustment when the bauble is equipped
      * @return this
      */
-    @Optional.Method(modid = ModIds.ConstIds.gamestages)
+    @Optional.Method(modid = ModIds.ConstIds.baubles)
     public T addBaubleLimitAdjustment(ItemStack stack, int adjustment) {
         if (!stack.isEmpty() && stack.getItem() instanceof IBauble) {
             baubleLimitAdjustments.put(stack, adjustment);
@@ -184,7 +184,6 @@ public abstract class AbstractLimitBuilder<T extends AbstractLimitBuilder<T, S>,
     /**
      * Returns any defined bauble pickup limit adjustments.
      */
-    @Optional.Method(modid = ModIds.ConstIds.gamestages)
     public Map<ItemStack, Integer> getBaubleLimitAdjustments() {
         return this.baubleLimitAdjustments;
     }
@@ -225,7 +224,6 @@ public abstract class AbstractLimitBuilder<T extends AbstractLimitBuilder<T, S>,
     /**
      * Returns any defined GameStage group pickup limit overrides.
      */
-    @Optional.Method(modid = ModIds.ConstIds.gamestages)
     public LinkedHashMap<String, Integer> getStageLimitOverride() {
         return this.stageLimitOverride;
     }
@@ -252,7 +250,6 @@ public abstract class AbstractLimitBuilder<T extends AbstractLimitBuilder<T, S>,
     /**
      * Returns any defined GameStage group ItemStack removals.
      */
-    @Optional.Method(modid = ModIds.ConstIds.gamestages)
     public Map<String, NonNullList<Ingredient>> getStagedStackRemovals() {
         return this.stagedStackRemovals;
     }

@@ -6,6 +6,8 @@
 - Renamed Pickup Limit Builder `addStagedStackRemovals()` to `addStagedItemRemovals()`. This method now supports IIngredients.
 ### Fixed
 - Fixed over-limit items being picked up and dropped constantly
+- Fixed script error when Baubles is not loaded
+- Fixed script error when Game Stages is not loaded
 ### Removed
 - Removed Pickup Limit Builder `addOreDict()` method. This is functionality is included in `addItems()`.
 - Removed Pickup Limit Builder `addStagedOreRemovals()` method. This functionality is included in `addStagedItemRemovals()`.

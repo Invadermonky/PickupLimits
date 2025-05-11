@@ -52,6 +52,8 @@ public class CommonEventHandler {
         if (text.getFormattedText().matches("^Format error: .*")) {
             text = new TextComponentTranslation(limitMessage);
         }
-        player.sendStatusMessage(text, true);
+        if(!text.getFormattedText().isEmpty()) {
+            player.sendStatusMessage(text, true);
+        }
     }
 }
