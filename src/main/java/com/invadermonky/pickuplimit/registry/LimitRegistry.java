@@ -33,9 +33,9 @@ public class LimitRegistry {
 
     public static List<EquipmentLimitGroup> getEquipmentLimitGroups(EntityPlayer player, ItemStack stack) {
         List<EquipmentLimitGroup> pickupLimitGroups = new ArrayList<>();
-        for (EquipmentLimitGroup pickupLimitGroup : equipmentLimitGroups.values()) {
-            if (pickupLimitGroup.matches(player, stack)) {
-                pickupLimitGroups.add(pickupLimitGroup);
+        for (EquipmentLimitGroup equipmentLimitGroup : equipmentLimitGroups.values()) {
+            if (equipmentLimitGroup.matches(player, stack)) {
+                pickupLimitGroups.add(equipmentLimitGroup);
             }
         }
         return pickupLimitGroups;
@@ -52,11 +52,11 @@ public class LimitRegistry {
     }
 
     /**
-     * Returns all limit groups associated with this
+     * Returns all limit groups associated with the passed Player and ItemStack.
      *
-     * @param player
-     * @param stack
-     * @return
+     * @param player The player being queried
+     * @param stack The itemstack being queried
+     * @return All Pickup and Equipment limit groups valid for the passed player and itemstack
      */
     public static List<AbstractLimitGroup<?>> getLimitGroups(EntityPlayer player, ItemStack stack) {
         List<AbstractLimitGroup<?>> groups = new ArrayList<>();

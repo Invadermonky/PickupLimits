@@ -34,7 +34,7 @@ public class EquipmentLimitBuilderCT extends ILimitBuilderCT<EquipmentLimitBuild
         if (LimitRegistry.getAllEquipmentLimitGroups().containsKey(this.getBuilder().getGroupName())) {
             CraftTweakerAPI.logWarning("Duplicate group name found. Previous limit group will be overwritten.");
         }
-        if (this.getBuilder().getGroupItems().isEmpty() && this.getBuilder().getGroupEnchants().isEmpty()) {
+        if (this.getBuilder().getGroupItems().isEmpty() && (this.getBuilder().getGroupEnchants().isEmpty() && !this.getBuilder().getMatchAnyEnchant())) {
             CraftTweakerAPI.logWarning("Equipment Limit group is empty. No items or enchantments are registered.");
         }
         LimitRegistry.addEquipmentLimitGroup(this.getBuilder().build());
